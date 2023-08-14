@@ -1,0 +1,26 @@
+# Nix
+result
+.direnv/
+
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+
+# Output
+*.pdf
+
+*.aux
+*.lof
+*.log
+*.lot
+*.fls
+*.out
+*.toc
+*.fmt
+*.fot
+*.cb
+*.cb2
+.*.lb
+*.synctex.gz
+*.fdb_latexmk
+*.thm
