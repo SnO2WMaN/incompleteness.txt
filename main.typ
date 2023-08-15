@@ -7,6 +7,8 @@
   ),
 )
 
+#outline()
+
 #import "@preview/lemmify:0.1.2": *
 #let (
   definition, theorem, lemma, corollary, remark, proposition, example, proof, rules: thm-rules
@@ -47,13 +49,6 @@
   inset: (left: 1em, right: 1em, top: 0.5em, bottom: 0.5em),
 )
 
-#import "@preview/minitoc:0.1.0": *
-#set heading(numbering: "1.1")
-
-#outline()
-
-#import "@preview/in-dexter:0.0.4": *
-
 = 計算論
 
 == 準備
@@ -61,6 +56,10 @@
 #definition(name: "形式的な自然数")[
   TODO
 ]<formalized_nat>
+
+#definition(name: "関数")[
+  TODO
+]
 
 #let FNat = $mono("N")$
 #let vecx = $accent(mono(x), arrow)$
@@ -75,7 +74,7 @@
 #example(name: "関係の例")[
   - 「$mono(x)$と$mono(y)$は同数の$mono(s)$を持っている」すなわち「$mono(x)$が$mono(y)$が等しい」という関係$REq$は，2項関係である．$REq = {(mono(0),mono(0)), (mono(1),mono(1)), (mono(2),mono(2)),dots}$．
   - 「$mono(y)$は$mono(x)$より多くの$mono(s)$を持っている」すなわち「$mono(y)$は$mono(x)$より大きい」という関係$RGt$は，2項関係である．$RGt = {(mono(0),mono(1)), (mono(0),mono(2)), (mono(1),mono(3)),dots}$．
-  - 偶数の集合は0項関係である．$REven = {mono(0),mono(2),mono(4),...}$．
+  - 偶数の集合は1項関係である．$REven = {mono(0),mono(2),mono(4),...}$．
 ]<relation_examples>
 
 #definition(name: "特性関数")[
@@ -94,7 +93,7 @@
 
 == 原始再帰的
 
-我々がよく知っている自然数についての初等的な関数の殆どは，原始再帰的な関数として表現できる．
+我々のよく知っている自然数についての初等的な関数や関係の殆どは，原始再帰的な関数や関係として表現できる．
 
 まずは原始再帰的な関数の定義を与えよう．
 
@@ -259,7 +258,7 @@
   また，中置記法として，$fmsub(x,y)$を$mono(x) minus.dot mono(y)$とも書く．
 ]<msub>
 
-ある条件を満たすときに$mono(1)$を，そうでないときは$mono(0)$を返すような関数は判定関数と呼び，後々必要になるので定義しておく．
+後で特性関数を定義するときに必要となる，次の関数も定義しておこう．
 
 #let fisZero = $serif("isZero")$
 #definition(name: "ゼロ判定")[
@@ -390,11 +389,10 @@
   - $RGte := RGt or REq$とする．すなわち「$mono(y)$は$mono(x)$以上」という関係であり，$mono(x) <= mono(y)$とも書く．
 ]<neq_gte>
 
+@propositional_logic_operation_prec などより明らかに，次の系が成り立つ．
+
 #corollary[
   関係$RNEq, RGte$は，原始再帰的関係である．
-]
-#proof[
-  @eq_is_prec, @gt_is_prec, @propositional_logic_operation_prec より従う．
 ]
 
 #let RGteForall(y, m, r) = $forall_(#y <= #m).[#r]$
@@ -488,7 +486,106 @@
 ]
 #theorem[
   関係$RPrime$は原始再帰的関係である．
-]
+]<rprime_is_primrec>
 #proof[
   $RPrime(mono(x)) := (mono(2) <= mono(x)) and not RGtExists(mono(y), mono(x), mono(y) != mono(1) and RDiv(mono(x), mono(y)))$とすればよい．
+]
+
+=== 場合分け関数と有界最小化
+
+#let fbcase(R,f,g) = $("if" #R "then" #f "else" #g)$
+#definition(name: "場合分け関数")[
+  関係$mono(R) subset.eq FNat^n$と関数$serif(f), serif(g) : FNat^n -> FNat$について，以下のように定義される関数$fbcase(mono(R), serif(f), serif(g)) : FNat^n -> FNat$を，場合分け関数と呼ぶ．
+  $
+    fbcase(mono(R), serif(f), serif(g))(vecx) := cases(
+      serif(f)(vecx) "if" vecx in mono(R),
+      serif(g)(vecx) "if" vecx in.not mono(R)
+    )
+  $
+]
+
+#theorem[
+  関係$mono(R) subset.eq FNat^n$が原始再帰的関係，関数$serif(f), serif(g) : FNat^n -> FNat$が原始再帰的関数であるとき，関数$fbcase(mono(R), serif(f), serif(g)) : FNat^n -> FNat$も原始再帰的関数である．
+]
+#proof[
+  $fbcase(mono(R), serif(f), serif(g))(vecx) := chi_mono(R)(vecx) times serif(f)(vecx) + chi_(not mono(R))(vecx) times serif(g)(vecx)$と定義すれば要件を満たし，これが原始再帰的関数になることは明らか．
+]
+
+#let fminimize(y, m, R) = $mu_(#y <= #m).[#R]$
+#let textm(content) = text(font: "Noto Serif CJK JP", weight: "regular", content)
+
+#definition(name: "有界最小化関数")[
+  $n+1$項関係$mono(R) subset.eq FNat^(n + 1)$に対し，以下のように定義される$n+1$項関数$fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) : FNat^(n+1) -> FNat$を，有界最小化関数と呼ぶ．
+  $
+    fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) :=
+    cases(
+      mono(k) quad #textm[$mono(m)$以下の$mono(y)$のうち，$mono(R)(vecx, mono(y))$を成立させる最小の$mono(y)$が$mono(k)$として存在するとき],
+      mono(m) quad #textm[そのような$mono(y)$が存在しないとき]
+    )
+  $
+]
+
+#theorem[
+  関係$mono(R) subset.eq FNat^(n + 1)$が原始再帰的関係であるとき，有界最小化関数$fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) : FNat^(n+1) -> FNat$は原始再帰的関数である．
+]
+#proof[
+  以下のように定義すれば要件を満たす．
+  $
+    fminimize(mono(y), mono(0), mono(R)(vecx, mono(y))) &= mono(0) \
+    fminimize(mono(y), mono("s(m)"), mono(R)(vecx, mono(y))) &= "if" RGteExists(mono(y), mono(m), R(vecx, mono(y))) "then" fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) "else" mono("s(m)")
+  $
+
+  これが原始再帰的関数になることは明らか．
+]
+#remark[
+  この証明で構成した関数をよく見れば，やはり@bounded_quantification_upper はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:FNat^k -> FNat$によって与えた$fminimize(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$も，やはり原始再帰的関数として構成できる．
+]<bounded_minimize_upper>
+
+=== $n$番目の素数の計算
+
+素数について成り立つ，次の定理 @next_prime_upper を用いることで，$i$番目の素数を出力する関数を原始再帰的関数として構成することが出来る．
+
+#theorem(name: "素数の探索範囲の上界について")[
+  $p_n$が$n$番目の素数のとき，次の素数である$n + 1$番目の素数$p_(n+1)$は$p_n ! + 1$以下に存在する．
+]<next_prime_upper>
+#proof[
+  TODO:
+]
+
+#let fprime = $sans("p")$
+#definition[
+  $n$番目の素数を出力する関数を，$fprime(n) : FNat -> FNat$とする．
+  ただし，素数は0番目から数えるとする．すなわち，$fprime(mono(0)) = mono(2), fprime(mono(1)) = mono(3), ...$である．
+]
+
+#theorem[
+  関数$fprime$は原始再帰的関数である．
+]
+#proof[
+  @next_prime_upper より次の素数の探索範囲は$fprime(mono(n))! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
+
+  したがって，所望の関数$fprime$は以下のように定義すればよい．
+  $
+    fprime(mono(0)) &:= mono(2) \
+    fprime(mono("s(n)")) &:= fminimize(mono(y), fprime(mono(n))! + 1, fprime(mono(n)) < mono(y) and RPrime(mono(y)))
+  $
+
+  ここまでで，次のことがわかっている．
+  - 階乗が原始再帰的関数として表せること (@is_primrec_2)
+  - $RPrime$が原始再帰的関係であること (@rprime_is_primrec)
+  - 有界最小化の上界を原始再帰的関数で定義してもよいこと (@bounded_minimize_upper)
+
+  これらの結果を踏まえれば，定義した関数が原始再帰的であることは明らか．
+]
+
+#example[
+  本当になっているか確かめてみよう．
+
+  - $fprime(mono(1)) = fminimize(mono(y), fprime(mono(0))! + 1, fprime(mono(0)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y),
+  mono(3), mono(2) < mono(y) and RPrime(mono(y))) = mono(3)$
+  - $fprime(mono(2)) = fminimize(mono(y), fprime(mono(1))! + 1, fprime(mono(1)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(7), mono(3) < mono(y) and RPrime(mono(y))) = mono(5)$
+  - $fprime(mono(3)) = fminimize(mono(y), fprime(mono(2))! + 1, fprime(mono(2)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(121), mono(5) < mono(y) and RPrime(mono(y))) = mono(7)$
+
+  $fprime(mono(3))$の有界最小化の探索範囲を見ればわかるとおり，この関数の計算効率は非常が悪い．#footnote[100番目の素数$mono(523)$を求める$fprime(mono(100))$で有界最小化の探索範囲はおよそ$10^158$となる．]
+  しかしながら，この計算は必ずいずれ終わるのである．
 ]
