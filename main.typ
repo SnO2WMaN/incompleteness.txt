@@ -1,7 +1,7 @@
 #import "template.typ": *
 
 #show: project.with(
-  title: "不完全性定理",
+  title: "不完全性定理についての諸々",
   authors: (
     "SnO2WMaN",
   ),
@@ -48,6 +48,10 @@
   stroke: (left: (thickness: 1pt, dash: "dotted")),
   inset: (left: 1em, right: 1em, top: 0.5em, bottom: 0.5em),
 )
+
+#include "introduction.typ"
+
+= パラドックス
 
 = 計算論
 
