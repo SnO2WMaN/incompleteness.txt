@@ -10,7 +10,7 @@
 #import "@preview/lemmify:0.1.2": *
 #let (
   definition, theorem, lemma, corollary, remark, proposition, example, proof, rules: thm-rules
-) = default-theorems("thm-group", lang: "en")
+) = default-theorems("thm-group", lang: "en", max-reset-level: 3)
 #show: thm-rules
 
 #show thm-selector("thm-group", subgroup: "definition"): it => box(
@@ -21,22 +21,38 @@
 
 #show thm-selector("thm-group", subgroup: "theorem"): it => box(
   it,
-  stroke: (left: (thickness: 2pt)),
-  inset: 1em,
+  stroke: 1pt,
+  inset: 1em
 )
 
 #show thm-selector("thm-group", subgroup: "corollary"): it => box(
   it,
-  stroke: (left: (thickness: 2pt)),
-  inset: 1em,
+  stroke: 1pt,
+  inset: 1em
+)
+
+#show thm-selector("thm-group", subgroup: "example"): it => box(
+  it,
+  inset: (left: 1em, right: 1em, top: 1em, bottom: 1em),
+)
+
+#show thm-selector("thm-group", subgroup: "remark"): it => box(
+  it,
+  inset: (left: 1em, right: 1em, top: 1em, bottom: 1em),
 )
 
 #show thm-selector("thm-group", subgroup: "proof"): it => box(
   it,
-  stroke: (left: (thickness: 2pt, dash: "dotted")),
-  inset: 1em,
+  stroke: (left: (thickness: 1pt, dash: "dotted")),
+  inset: (left: 1em, right: 1em, top: 0.5em, bottom: 0.5em),
 )
 
+#import "@preview/minitoc:0.1.0": *
+#set heading(numbering: "1.1")
+
+#outline()
+
+#import "@preview/in-dexter:0.0.4": *
 
 = 計算論
 
@@ -74,7 +90,9 @@
   $
 ]<characteristic_function>
 
-== 原始再帰関数
+// 部分集合というものをそのまま経由せず，特性関数という関数に依って特徴づけられる$FNat^n$の部分集合を関係と呼ぶ，のように定義した方が良い気もする．
+
+== 原始再帰的
 
 我々がよく知っている自然数についての初等的な関数の殆どは，原始再帰的な関数として表現できる．
 
@@ -128,6 +146,8 @@
 
   原始再帰的な関数を，原始再帰的関数という．
 ]<primitive_recursive_function>
+
+=== 原始再帰的関数の例
 
 前述したとおり，自然数についての初等的な関数の殆どが原始再帰的である．見ていこう．
 
@@ -185,13 +205,40 @@
   // #TODO
 ]<mul_example>
 
+ここまで定義した関数について，定義より明らかに次の @is_primrec_1 が成り立つ．
 
-#remark(numbering: none)[
-  煩雑なので，これより定義する関数では，次のように略記していく．
+#corollary[
+  恒等関数$fid$，ゼロ関数$fzero$，加算$fadd$，乗算$fmul$は原始再帰的関数である．
+]<is_primrec_1>
 
+さて，更に関数を定義していきたいが，毎回 @add や @mul のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
+これを避けるために，@primrec_abbrev を導入する．
+
+#remark[
+  以下の略記を用いてもよいとする．
   - 最も外側の原始再帰は外して定義する．
   - $fconst(n,c), fproj(n,i), fid$は明らかなら省略する．
-]
+]<primrec_abbrev>
+
+#let fexp = $serif("exp")$
+#definition(name: "冪乗")[
+  以下のように定義される関数$fexp : FNat^2 -> FNat$を，冪乗と呼ぶ．
+  $
+    fexp(mono(x), mono(0)) &= mono(1) \
+    fexp(mono(x), mono("s(x)")) &= mono(x) times fexp(mono(x), mono(y))
+  $
+  また，略記として$fexp(mono(x),mono(y))$を$mono(x)^mono(y)$とも書く．
+]<exp>
+
+#let ffrac = $serif("frac")$
+#definition(name: "階乗")[
+  以下のように定義される関数$ffrac : FNat -> FNat$を，冪乗と呼ぶ．
+  $
+    ffrac(mono(0)) &= mono(1) \
+    ffrac(mono("s(x)")) &= (mono(x) + mono(1)) times ffrac(mono(x))
+  $
+  また，略記として$ffrac(mono(x))$を$mono(x)!$とも書く．
+]<exp>
 
 #let fpred = $serif("pred")$
 #definition(name: "前者関数")[
@@ -207,43 +254,12 @@
   以下のように定義される関数$fmsub : FNat^2 -> FNat$を，補正付き減算と呼ぶ．
   $
     fmsub(mono(x), mono(0)) &= mono(0) \
-    fmsub(mono(x), mono("s(y)")) &= fpred(fproj(3,3)(mono(x), mono(y), fmsub(mono(x), mono(y))))
+    fmsub(mono(x), mono("s(y)")) &= fpred(fmsub(mono(x), mono(y)))
   $
-
   また，中置記法として，$fmsub(x,y)$を$mono(x) minus.dot mono(y)$とも書く．
 ]<msub>
 
-#let fbsum(f) = $Sigma_(#f)$
-#definition(name: "有界総和")[
-  任意の原始再帰関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbsum(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
-  $
-    fbsum(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
-    fbsum(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) + fbsum(serif(f))(vecx, mono(y))
-  $
-]<bounded_sum>
-
-#example(name: "有界総和の例")[
-  有界総和の例を計算してみよう．
-  - $fbsum(fid)(mono(3)) = fid(mono(3)) + fid(mono(2)) + fid(mono(1)) + fid(mono(0)) = mono(6)$
-  - $fbsum(fsucc)(mono(3)) = fsucc(mono(3)) + fsucc(mono(2)) + fsucc(mono(1)) + fsucc(mono(0)) = mono(10)$
-  - $fbsum(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) + fadd(mono(2), mono(2)) + fadd(mono(2), mono(1)) + fadd(mono(2), mono(0)) = mono(14)$
-]
-
-#let fbmul(f) = $Pi_(#f)$
-#definition(name: "有界総乗")[
-  任意の原始再帰関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbmul(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
-  $
-    fbmul(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
-    fbmul(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) times fbmul(serif(f))(vecx, mono(y))
-  $
-]<bounded_mul>
-
-#example(name: "有界総乗の例")[
-  有界総乗の例を計算してみよう．
-  - $fbmul(fid)(mono(3)) = fid(mono(3)) times fid(mono(2)) times fid(mono(1)) times fid(mono(0)) = mono(0)$
-  - $fbmul(fsucc)(mono(3)) = fsucc(mono(3)) times fsucc(mono(2)) times fsucc(mono(1)) times fsucc(mono(0)) = mono(24)$
-  - $fbmul(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) times fadd(mono(2), mono(2)) times fadd(mono(2), mono(1)) times fadd(mono(2), mono(0)) = mono(240)$
-]
+ある条件を満たすときに$mono(1)$を，そうでないときは$mono(0)$を返すような関数は判定関数と呼び，後々必要になるので定義しておく．
 
 #let fisZero = $serif("isZero")$
 #definition(name: "ゼロ判定")[
@@ -262,6 +278,52 @@
     fisPos(mono("s(x)")) &= mono(1)
   $
 ]<iszero>
+
+ここまで定義した関数についても，やはり明らかに次の @is_primrec_2 が成り立つ．
+
+#corollary[
+  冪乗$fexp$，階乗$ffrac$，前者関数$fpred$，補正付き減算$fmsub$，ゼロ判定$fisZero$，正数判定$fisPos$は原始再帰的関数である．
+]<is_primrec_2>
+
+#let fbsum(f) = $Sigma_(#f)$
+#definition(name: "有界総和")[
+  関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbsum(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
+  $
+    fbsum(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
+    fbsum(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) + fbsum(serif(f))(vecx, mono(y))
+  $
+]<bounded_sum>
+
+#example(name: "有界総和の例")[
+  有界総和の例を計算してみよう．
+  - $fbsum(fid)(mono(3)) = fid(mono(3)) + fid(mono(2)) + fid(mono(1)) + fid(mono(0)) = mono(6)$
+  - $fbsum(fsucc)(mono(3)) = fsucc(mono(3)) + fsucc(mono(2)) + fsucc(mono(1)) + fsucc(mono(0)) = mono(10)$
+  - $fbsum(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) + fadd(mono(2), mono(2)) + fadd(mono(2), mono(1)) + fadd(mono(2), mono(0)) = mono(14)$
+]
+
+#let fbmul(f) = $Pi_(#f)$
+#definition(name: "有界総乗")[
+  関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbmul(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
+  $
+    fbmul(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
+    fbmul(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) times fbmul(serif(f))(vecx, mono(y))
+  $
+]<bounded_mul>
+
+#example(name: "有界総乗の例")[
+  有界総乗の例を計算してみよう．
+  - $fbmul(fid)(mono(3)) = fid(mono(3)) times fid(mono(2)) times fid(mono(1)) times fid(mono(0)) = mono(0)$
+  - $fbmul(fsucc)(mono(3)) = fsucc(mono(3)) times fsucc(mono(2)) times fsucc(mono(1)) times fsucc(mono(0)) = mono(24)$
+  - $fbmul(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) times fadd(mono(2), mono(2)) times fadd(mono(2), mono(1)) times fadd(mono(2), mono(0)) = mono(240)$
+]
+
+有界総和と有界総乗についても自明に次の @is_primrec_3 が成り立つ．
+
+#corollary[
+  $f: FNat^(n+1) -> FNat$が原始再帰的関数であるなら，有界総和$fbsum(f)$，有界総乗$fbmul(f)$は原始再帰的関数である．
+]<is_primrec_3>
+
+=== 原始再帰的関係
 
 #definition(name: "原始再帰的関係")[
   関係$mono(R) subset.eq FNat^n$の特性関数$chi_mono(R)$が原始再帰的関数であるとき，$mono(R)$は原始再帰的関係であるという．
@@ -314,9 +376,11 @@
   - $chi_mono(mono(R) and mono(S))(vecx) := chi_mono(mono(R))(vecx) times chi_mono(mono(S))(vecx)$
   - $chi_mono(mono(R) or mono(S))(vecx) := fisPos(chi_mono(mono(R))(vecx) + chi_mono(mono(S))(vecx))$
 
-  このとき定義より$mono(R),mono(S)$の特性関数$chi_mono(R),chi_mono(S)$は原始再帰的関数であるので，$chi_mono(not mono(R)),chi_mono(mono(R) and mono(S)),chi_mono(mono(R) or mono(S))$も原始再帰的関数となる．
+  このとき仮定より$mono(R),mono(S)$の特性関数$chi_mono(R),chi_mono(S)$は原始再帰的関数であるので，@is_primrec_1 や @is_primrec_2 より，$chi_mono(not mono(R)),chi_mono(mono(R) and mono(S)),chi_mono(mono(R) or mono(S))$も原始再帰的関数となる．
 ]
-
+#remark(numbering: none)[
+  $mono(R) and mono(S), mono(R) or mono(S)$の特性関数$chi_mono(mono(R) and mono(S))(vecx), chi_mono(mono(R) or mono(S))(vecx)$を観察すると，前者は乗算，後者は加算に基づいて特性関数が構成されている．このような対応から，連言と選言はそれぞれ論理積と論理和とも呼ばれる．
+]
 
 #let RNEq = $mono("NEq")$
 #let RGte = $mono("Gte")$
@@ -327,7 +391,7 @@
 ]<neq_gte>
 
 #corollary[
-  @neq_gte で定義した関係$RNEq, RGte$は，原始再帰的関係である．
+  関係$RNEq, RGte$は，原始再帰的関係である．
 ]
 #proof[
   @eq_is_prec, @gt_is_prec, @propositional_logic_operation_prec より従う．
@@ -361,7 +425,6 @@
 
 #remark[
   証明によって構成された特性関数を注意深く観察すれば，有界量化の上界$mono(m)$を何らかの原始再帰関数によって与えても，その特性関数は原始再帰的関数となることがわかる．
-
   すなわち，$f:FNat^k -> FNat$が原始再帰関数であるなら，$RGteForall(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$や$RGteExists(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$は原始再帰的な$n + k$項関係となる．
 ]<bounded_quantification_upper>
 
@@ -375,10 +438,9 @@
   - $RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は「$mono(m)$より小さいある$mono(y)$で，$mono(R)(vecx, mono(y))$が成立する」を表す関係とする．
 ]
 
-#corollary[
+#theorem[
   関係$mono(R) subset.eq FNat^n$が原始再帰的関係であるとき，関係$RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は原始再帰的関係である．
 ]
-
 #proof[
   以下のように特性関数を定義すれば要件を満たす．
   - $RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y))) := RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y))) and not mono(R)(vecx, mono(m))$
@@ -388,7 +450,7 @@
 ]
 #remark(numbering: none)[
   @bounded_quantification_upper は$RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$についても成り立つ．
-  すなわち，上界を何らかの原始再帰関数$f(accent(mono(m), arrow))$によって与えた$RGtForall(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$や$RGtExists(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$も原始再帰的な$n + k$項関係となる．
+  すなわち，上界を何らかの原始再帰関数$f(accent(mono(m), arrow))$によって与えた$RGtForall(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$や$RGtExists(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$もやはり原始再帰的な$n + k$項関係となる．
 ]
 
 ここまでの準備によって，偶数の集合が原始再帰的関係であることを示すことができる．
@@ -397,20 +459,20 @@
   $mono(x) in FNat$について，「$mono(x)$は偶数個の$mono(s)$を持っている」すなわち「$mono(x)$は偶数である」という1項関係を$REven subset.eq FNat$として表す．
 ]
 
-#corollary[
+#theorem[
   関係$REven$は原始再帰的関係である．
 ]
 #proof[
   $REven(mono(x)) := RGteExists(mono(y), mono(x), mono(x) = mono(2) times mono(y))$とすればよい．
 ]
 
-ここまでの定義で，更に様々な関係が原始再帰的関係として表すことができる．
+更に様々な関係も原始再帰的関係として表すことができる．
 
 #let RDiv = $mono("Div")$
 #definition[
   $mono(x) in FNat$について，「$mono(x)$は$mono(y)$の約数個の$mono(s)$を持っている」すなわち「$mono(x)$は$mono(y)$で割り切れる」という2項関係を$RDiv subset.eq FNat^2$として表す．
 ]
-#corollary[
+#theorem[
   関係$RDiv$は原始再帰的関係である．
 ]
 #proof[
@@ -424,7 +486,7 @@
 #definition[
   $mono(x) in FNat$について，「$mono(x)$は素数個の$mono(s)$を持っている」すなわち「$mono(x)$は素数である」という1項関係を$RPrime subset.eq FNat$として表す．なお，$mono(0), mono(1)$は素数ではないとする．
 ]
-#corollary[
+#theorem[
   関係$RPrime$は原始再帰的関係である．
 ]
 #proof[
