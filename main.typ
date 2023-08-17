@@ -571,6 +571,8 @@
       serif(g)(vecx) "if" vecx in.not mono(R)
     )
   $
+
+  煩雑な場合は，$fbcase(mono(R), serif(f), serif(g))(vecx)$を$"if" mono(R)(vecx) "then" serif(f)(vecx) "else" serif(g)(vecx)$とも略記する．
 ]
 
 #theorem[
@@ -601,7 +603,7 @@
   以下のように定義すれば要件を満たす．
   $
     fminimize(mono(y), mono(0), mono(R)(vecx, mono(y))) &= mono(0) \
-    fminimize(mono(y), mono("s(m)"), mono(R)(vecx, mono(y))) &= "if" RGteExists(mono(y), mono(m), R(vecx, mono(y))) "then" fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) "else" mono("s(m)")
+    fminimize(mono(y), mono("s(m)"), mono(R)(vecx, mono(y))) &= "if" RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y))) "then" fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) "else" mono("s(m)")
   $
 
   これが原始再帰的関数になることは明らか．
@@ -639,10 +641,10 @@
     fprime(mono("s(n)")) &:= fminimize(mono(y), fprime(mono(n))! + 1, fprime(mono(n)) < mono(y) and RPrime(mono(y)))
   $
 
-  ここまでで，次のことがわかっている．
-  - 階乗が原始再帰的関数として表せること (@is_primrec_2)
-  - $RPrime$が原始再帰的関係であること (@rprime_is_primrec)
-  - 有界最小化の上界を原始再帰的関数で定義してもよいこと (@bounded_minimize_upper)
+  これまでに次のことを証明してきた#footnote[もちろん，これより多くのことが後ろで積み上がっている．ここでは代表的なものを取り上げた．]．
+  - 階乗が原始再帰的関数として表せること．(@is_primrec_2)
+  - $RPrime$が原始再帰的関係であること．(@rprime_is_primrec)
+  - 有界最小化の上界を原始再帰的関数で定義してもよいこと． (@bounded_minimize_upper)
 
   これらの結果を踏まえれば，定義した関数が原始再帰的であることは明らか．
 ]
