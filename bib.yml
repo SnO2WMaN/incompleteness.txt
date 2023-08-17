@@ -1,0 +1,113 @@
+goedel_1931:
+  type: article
+  title: Über formal unentscheidbare Sätze der Principia Mathematica und verwandter Systeme. I.
+  author: K. Gödel
+  date: 1931
+
+kritchman_raz_2010:
+  type: article
+  title: The Surprise Examination Paradox and the Second Incompleteness Theorem
+  author:
+    - S. Kritchman
+    - R. Raz
+  date: 2010
+  doi: "10.48550/arXiv.1011.4974"
+
+quine_1946:
+  type: article
+  title: Concatenation as a Basis for Arithmetic
+  author: W. V. O. Quine
+  date: 1946
+
+grzegorczyk_2005:
+  type: article
+  title: Undecidability without Arithmetization
+  author: A. Grzegorczyk
+  date: 2005
+
+grzegorczyk_zdanowski_2007:
+  type: article
+  title: Undecidability and Concatenation
+  author:
+    - A. Grzegorczyk
+    - K. Zdanowski
+  date: 2007
+
+tarski_mstowski_robinson_1953:
+  type: article
+  title: "Undecidable Theories: Studies in Logic and the Foundation of Mathematics"
+  author:
+    - A. Tarski
+    - A. Mostowski
+    - R. M. Robinson
+  date: 1953
+
+vaught_1966:
+  type: article
+  title: On a Theorem of Cobham Concerning Undecidable Theories
+  author: R. L. Vaught
+  date: 1966
+
+jones_shepherdson_1983:
+  type: article
+  title: Variants of Robinson’s essentially undecidable theory R
+  author:
+    - J. P. Jones
+    - J. C. Shepherdso
+  date: 1983
+
+tanaka_2012:
+  title: "ゲーデルに挑む ─ 証明不可能なことの証明"
+  author: 田中 一之
+  date: 2012
+  pulisher: 東京大学出版会
+  isbn: 9784130639002
+
+fuchino_2013:
+  title: "[[[不完全性定理に挑む]に挑む]に挑む]"
+  author: 渕野 昌
+  date: 2013
+
+hilbert_bernays_1939:
+  title: Grundlagen Der Mathematik
+  volume: 2
+  author:
+    - D. Hilbert
+    - P. Bernays
+  date: 1939
+
+kikuchi_2014:
+  title: 不完全性定理
+  author: 菊池 誠
+  date: 2014
+  publisher: 共立出版
+
+kurahashi_2021:
+  title: 不完全性定理の数学的発展
+  author: 倉橋 太志
+  date: 2021
+  doi: 10.11429/sugaku.0731060
+
+smullyan_1992:
+  title: Gödel's Incompleteness Theorems
+  author: R. Smullyan
+  date: 1992
+
+smullyan_1992_ja:
+  title: スマリヤン 不完全性定理【改訳版】
+  author:
+    - 高橋 昌一郎
+    - 川辺 治之
+    - 村上 祐子
+  date: 2019
+
+kikuchi_sano_kurahashi_usuba_kurokawa_2016:
+  title: 数学における証明と真理 ─ 様相論理と数学基礎論
+  author:
+    - 佐野 勝彦
+    - 倉橋 太志
+    - 薄葉 季路
+    - 黒川 英徳
+    - 菊池 誠
+  date: 2016
+  publisher: 共立出版

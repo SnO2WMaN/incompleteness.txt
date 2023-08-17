@@ -1,68 +1,133 @@
-#import "template.typ": *
-
-#show: project.with(
-  title: "不完全性定理についての諸々",
-  authors: (
-    "SnO2WMaN",
-  ),
+#let title = "Incompleteness.txt"
+#let authors = (
+  "SnO2WMaN",
 )
 
-#outline()
+#set document(title: title, author: authors)
+#set page(numbering: "1", number-align: center)
+#set heading(numbering: "1.1")
+
+#set text(font: ("Noto Serif CJK JP"), lang: "ja")
+// #set cite(style: "alphanumerical")
 
 #import "@preview/lemmify:0.1.2": *
 #let (
   definition, theorem, lemma, corollary, remark, proposition, example, proof, rules: thm-rules
 ) = default-theorems("thm-group", lang: "en", max-reset-level: 3)
-#show: thm-rules
 
+#show: thm-rules
 #show thm-selector("thm-group", subgroup: "definition"): it => box(
   it,
   stroke: (left: (thickness: 2pt)),
   inset: 1em,
 )
-
 #show thm-selector("thm-group", subgroup: "theorem"): it => box(
   it,
   stroke: 1pt,
   inset: 1em
 )
-
 #show thm-selector("thm-group", subgroup: "corollary"): it => box(
   it,
   stroke: 1pt,
   inset: 1em
 )
-
 #show thm-selector("thm-group", subgroup: "example"): it => box(
   it,
   inset: (left: 1em, right: 1em, top: 1em, bottom: 1em),
 )
-
 #show thm-selector("thm-group", subgroup: "remark"): it => box(
   it,
   inset: (left: 1em, right: 1em, top: 1em, bottom: 1em),
 )
-
 #show thm-selector("thm-group", subgroup: "proof"): it => box(
   it,
   stroke: (left: (thickness: 1pt, dash: "dotted")),
   inset: (left: 1em, right: 1em, top: 0.5em, bottom: 0.5em),
 )
 
-#include "introduction.typ"
+#align(center)[
+  #block(text(weight: 700, 1.75em, lang: "en", title))
+]
 
-= パラドックス
+#pad(
+  top: 0.5em,
+  bottom: 0.5em,
+  x: 2em,
+  grid(
+    columns: (1fr,) * calc.min(3, authors.len()),
+    gutter: 1em,
+    ..authors.map(author => align(center, strong(author))),
+  ),
+)
+
+#show outline.entry.where(
+  level: 1
+): it => {
+  v(1em, weak: true)
+  strong(it)
+}
+#outline(indent: auto)
+
+#pagebreak()
+
+#let TODO(content) = emph("TODO:" + content)
+
+= はじめに
+
+この文書は不完全性定理についての諸々をまとめたものです．
+自分用に纏めたものであり，人に見せることをあまり想定していないので，説明が不十分な部分があるかもしれません．
+また普通に誤りがある可能性もあります．
+これらの点についてはご了承ください．
+
+== メタ情報
+
+- この文書は#link("https://typst.app")[Typst]という執筆時では新興の組版システムによって作成しています．
+- 文書のソースファイル等は#link("https://github.com/SnO2WMaN/incompleteness.txt")に置かれており，最新のPDFファイルが自動的に#link("https://sno2wman.github.io/incompleteness.txt/main.pdf")にデプロイされています#footnote[文書のコンパイルが失敗していなければ．]．
+- 文書のライセンスは#link("https://github.com/SnO2WMaN/incompleteness.txt/blob/main/LICENSE")[CC0 1.0]であり，可能な限り著作権を放棄します．
+- 誤りなどがあれば，#link("https://github.com/SnO2WMaN/incompleteness.txt/issues")[GitHubのissue]か著者に連絡していただけると助かります．
+
+== 読書案内
+
+日本語で書かれた不完全性定理についての文献としては#cite("kikuchi_2014", "kurahashi_2021", "smullyan_1992_ja","kikuchi_sano_kurahashi_usuba_kurokawa_2016")があります．
+知っている範囲で簡単に紹介しておきます．#TODO[もっとちゃんと文献を増やす]
+
+- #cite("kikuchi_2014")は，日本における不完全性定理の第一人者#footnote[少なくとも私はそう思っています．]による不完全性定理の証明に至るまでの丁寧な解説書であり，更に少しの発展的な話題も載っています．数学の哲学について禁欲でないという特徴もあります．
+- #cite("kurahashi_2021")は，示すこと自体が目標になりがちな不完全性定理の，更に発展的な話題について書かれています．ただし，紙面の都合で多くの定理の証明が載っていません．
+- #cite("smullyan_1992_ja")は#cite("smullyan_1992")の日本語訳です．私が最初に読んだという点で思い入れがありますが，用語やアプローチがかなり独特なので，入門としてはあまりおすすめはしません#footnote[事情としては，Smullyanが数論的なアプローチを避けてより初等的な形式での議論を行おうとしている気があり，不完全性定理について全く知らない人間にとってはどういうモチベーションでそんなことをしているのか分かりにくいという難点があります．逆に言えば，分かってしまえばむしろかなり丁寧に議論していることが分かります．]．
+- #cite("kikuchi_sano_kurahashi_usuba_kurokawa_2016")は大きく様相論理，証明可能性論理，強制法，真理論についての本です．不完全性定理については，証明可能性論理の節で扱われています．
+
+英語で書かれた文献はもっとあります．#TODO[もっと書く]
+
+== 更新履歴
+
+#TODO[一旦完成してから書く．]
+
+= パラドックス！
+
+= 不完全性定理とは何なのか？
+
+// ここの歴史はかなり疑わしい
+
+今日「不完全性定理」と呼ばれる定理は，Gödel#cite("goedel_1931")によって初めて証明された．
+この元論文#cite("goedel_1931")ではRussel,WhiteheadによるPrincipia MathematicaをGödelがより使いやすく改良した体系における第1不完全性定理の証明が与えられ，第2不完全性定理についてはそのスケッチのみを与えるに留まっている．
+第2不完全性定理の詳細な証明については#cite("hilbert_bernays_1939")によって最初に証明が与えられた．
+
+== 不完全性定理という名前について
+
+#cite("tanaka_2012", "fuchino_2013")参照．
 
 = 計算論
 
 == 準備
 
+#TODO[どういうモチベーションで @formalized_nat を導入しているかをちゃんと書く]
+
 #definition(name: "形式的な自然数")[
-  TODO
+  // あとで書く．
 ]<formalized_nat>
 
 #definition(name: "関数")[
-  TODO
+  // あとで書く．
 ]
 
 #let FNat = $mono("N")$
@@ -590,6 +655,76 @@
   - $fprime(mono(2)) = fminimize(mono(y), fprime(mono(1))! + 1, fprime(mono(1)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(7), mono(3) < mono(y) and RPrime(mono(y))) = mono(5)$
   - $fprime(mono(3)) = fminimize(mono(y), fprime(mono(2))! + 1, fprime(mono(2)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(121), mono(5) < mono(y) and RPrime(mono(y))) = mono(7)$
 
-  $fprime(mono(3))$の有界最小化の探索範囲を見ればわかるとおり，この関数の計算効率は非常が悪い．#footnote[100番目の素数$mono(523)$を求める$fprime(mono(100))$で有界最小化の探索範囲はおよそ$10^158$となる．]
+  $fprime(mono(3))$の有界最小化の探索範囲を見ればわかるとおり，この関数の計算効率は非常が悪い#footnote[100番目の素数$mono(523)$を求める$fprime(mono(100))$で有界最小化の探索範囲はおよそ$10^158$となる．]．
   しかしながら，この計算は必ずいずれ終わるのである．
 ]
+
+= 1階述語論理
+
+== 構文論
+
+== 小さな構文論
+
+#definition(name: "アルファベット")[
+  以下の8個の記号をアルファベットという．
+  $ prime space.quad f space.quad P space.quad not space.quad -> space.quad exists space.quad hash space.quad triangle.r.small $
+]<fpl:alphabet>
+
+#definition(name: "略記")[
+  - $f, P$を$n >= 1$個並べた記号列$underbrace(f dots.c f, n), underbrace(P dots.c P, n)$を，それぞれ$f_n, P_n$と略記する．
+  - $f_n, P_n$の後に$prime$を$m >= 0$個並べた記号列$underbrace(f dots.c f, n) overbrace(prime dots.c prime, m), underbrace(P dots.c P, n) overbrace(prime dots.c prime, m)$を，それぞれ$f_n^m, P_n^m$と略記する．
+  - $hash$を$n$個並べた記号列$underbrace(hash dots.c hash, n)$を，$hash_n$と略記する．
+]
+
+== 算術の言語
+
+#let langA = $cal("L")_sans("A")$
+
+#definition(name: "算術の言語")[
+  よって特徴づけられる言語を，算術の言語$langA$という．
+]<fpl:lang_arithmetic>
+
+= Gödelの第1不完全性定理
+
+== Gödel-Rosserの第1不完全性定理
+
+=== Rosser可証性述語
+
+= Gödelの第2不完全性定理
+
+== Kreiselの注意
+
+= Robinson算術についての第2不完全性定理
+
+#let RobinsonArithmetic = $sans(Q)$
+#let WeakestArithmetic = $sans(R)$
+
+= 算術$WeakestArithmetic$について
+
+Robinson算術$RobinsonArithmetic$よりも更に弱い算術でも不完全性定理を証明することができる．
+そのような算術の例として，Tarski,Mostowski,Robinsonによって算術$WeakestArithmetic$が与えられた#cite("tarski_mstowski_robinson_1953")．
+この章では，この$WeakestArithmetic$について見ていこう．#cite("vaught_1966", "jones_shepherdson_1983")に基づく．
+
+= Boolosの不完全性定理
+
+= 様相論理
+
+= 証明可能性論理
+
+= Kolmogorov複雑度
+
+= Chaitinの不完全性定理
+
+= 抜き打ちテストのパラドックスの形式化
+
+驚くべきことに，抜き打ちテストのパラドックスを上手く形式化すると，第2不完全性定理が得られるということが分かっている．
+この章では#cite("kritchman_raz_2010")に基づき，その証明を見ていくことにしよう．
+
+= 連結の理論
+
+不完全性はどこからやって来るのか？Quineの考察#cite("quine_1946")によれば，それは算術よりもっと根源的な操作である「連結」という操作からやってくるという．
+この章では#cite("grzegorczyk_2005", "grzegorczyk_zdanowski_2007")などで提案された，連結の理論(Concatenation Theory)について見ていくことにしよう．
+
+= 自己検証可能な理論
+
+#bibliography("bib.yml")
