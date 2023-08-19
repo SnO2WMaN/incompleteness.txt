@@ -218,25 +218,25 @@
   $n$個の引数$vecx$を受け取るが，それらを全て破棄して$c$を返す関数を，定数関数といい，$fnConst(n, c) : Nat2Nat(n)$で表す．
 
   すなわち，$fnConst(n,c)(vecx) = c$である．
-]<constant_function>
+]<Computability_ConstFunction>
 
 #definition(name: "後者関数")[
   受け取った自然数の次の自然数を返す関数を，後者関数といい，$fnSucc : Nat2Nat(1)$で表す．
 
   すなわち，$fnSucc(x) = succ(x)$である．
-]<successor_function>
+]<Computability_SuccFunction>
 
 #definition(name: "射影関数")[
   $n$個の引数$x_1,...,x_n$を受け取り，そのうち$i$番目の引数を返す関数を，射影関数といい，$fnProj(n,i) : Nat2Nat(n)$で表す．
 
   すなわち，$fnProj(n,i) (x_1,...,x_n) = x_i$である．
-]<projection_function>
+]<Computability_ProjectionFunction>
 
 #definition(name: "関数合成")[
   $n$変数関数$fn(f) : Nat2Nat(n)$と，$n$個の$m$変数関数$fn(g)_1,...,fn(g)_n : Nat2Nat(m)$が与えられたとき，以下のように定義される$m$変数関数$fnComp_(fn(f),fn(g)_1,...,fn(g)_n) : Nat2Nat(m)$を，$fn(f),fn(g)_1,...,fn(g)_n$の関数合成という．
   $ fnComp_(fn(f),fn(g)_1,...,fn(g)_n)(vecx) = fn(f)(fn(g)_1 (vecx),...,fn(g)_n (vecx)) $
   ここで，$vecx$は$m$個の引数とする．
-]<function_composition>
+]<Computability_FunctionComposition>
 
 #definition(name: "原始再帰")[，
   $n$変数関数$fn(f) : Nat2Nat(n)$と，$n+2$変数関数$fn(g) : Nat2Nat(n+2)$が与えられたとき，以下のように定義される$n$変数関数$fnPrec(fn(f),fn(g)) : Nat2Nat(n)$を，$fn(f),fn(g)$の原始再帰という．
@@ -245,18 +245,18 @@
   fnPrec(fn(f),fn(g))(vecx, succ(y)) &= fn(g)(vecx, y, fnPrec(fn(f),fn(g))(vecx, y))
   $
   ここで，$vecx$は$m$個の引数とする．
-]<primitive_recursive>
+]<Computability_PrimitiveRecursive>
 
 #definition(name: "原始再帰的関数")[
   ある関数が原始再帰的であるとは，以下のいずれかの条件を満たすことをいう．
-  - 定数関数である．
-  - 後者関数である．
-  - 射影関数である．
-  - 原始再帰的な関数による関数合成である．
-  - 原始再帰的な関数による原始再帰である．
+  - 定数関数である．(@Computability_ConstFunction)
+  - 後者関数である．(@Computability_SuccFunction)
+  - 射影関数である．(@Computability_ProjectionFunction)
+  - 原始再帰的な関数による関数合成である．(@Computability_FunctionComposition)
+  - 原始再帰的な関数による原始再帰である．(@Computability_PrimitiveRecursive)
 
   原始再帰的な関数を，原始再帰的関数という．
-]<primitive_recursive_function>
+]<Computability_PrimitiveRecursiveFunction>
 
 === 原始再帰的関数の例
 
@@ -265,12 +265,12 @@
 #definition(name: "恒等関数")[
   $fnId : Nat2Nat(1) := fnProj(1, 1)$と定義される関数を，恒等関数とよぶ．
   すなわち，$fnId(x) = x$である．
-]<fnZero>
+]<Computability_IdFunction>
 
 #definition(name: "ゼロ関数")[
   $fnZero(n) : Nat2Nat(n) := fnConst(n, 0)$と定義される関数を，$n$変数ゼロ関数とよぶ．
   すなわち，$fnZero(n)(vecx) = 0$である．
-]<fnZero>
+]<Computability_ZeroFunction>
 
 #definition(name: "加算")[
   以下のように定義される関数$fnAdd : Nat2Nat(2)$を，加算と呼ぶ．
@@ -283,14 +283,14 @@
   $
 
   また，中置記法として，$fnAdd(x,y)$を$x + y$とも書く．
-]<add>
+]<Computability_AddFunction>
 
 #example(name: "加算の例")[
   $fnAdd$の挙動を確認して，たしかに加算となっていることを確認しよう．
 
   $fnAdd(2, 3) = 5$である．
   // #TODO
-]<add_example>
+]
 
 #definition(name: "乗算")[
   以下のように定義される関数$fnMul : Nat2Nat(2)$を，乗算と呼ぶ．
@@ -303,29 +303,29 @@
   $
 
   また，中置記法として，$fnMul(x,y)$を$x times y$とも書く．
-]<mul>
+]<Computability_MulFunction>
 
 #example(name: "乗算の例")[
   $fnMul$の挙動を確認して，たしかに乗算となっていることを確認しよう．
 
   $fnAdd(2, 3) = 6$である．
   // #TODO
-]<mul_example>
+]
 
-ここまで定義した関数について，定義より明らかに次の @is_primrec_1 が成り立つ．
+ここまで定義した関数について，定義より明らかに次の @Computability_PrimRecFn1 が成り立つ．
 
 #corollary[
   恒等関数$fnId$，ゼロ関数$fnZero$，加算$fnAdd$，乗算$fnMul$は原始再帰的関数である．
-]<is_primrec_1>
+]<Computability_PrimRecFn1>
 
-さて，更に関数を定義していきたいが，毎回 @add や @mul のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
-これを避けるために，@primrec_abbrev を導入する．
+さて，更に関数を定義していきたいが，毎回 @Computability_AddFunction や @Computability_MulFunction のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
+これを避けるために，@Computability_PrimRecFnAbbrev を導入する．
 
 #remark[
   以下の略記を用いてもよいとする．
   - 最も外側の原始再帰は外して定義する．
   - $fnConst(n,c), fnProj(n,i), fnId$は明らかなら省略する．
-]<primrec_abbrev>
+]<Computability_PrimRecFnAbbrev>
 
 #definition(name: "冪乗")[
   以下のように定義される関数$fnExp : Nat2Nat(2)$を，冪乗と呼ぶ．
@@ -334,7 +334,7 @@
     fnExp(x, succ(x)) &= x times fnExp(x, y)
   $
   また，略記として$fnExp(x,y)$を$x^y$とも書く．
-]<exp>
+]<Computability_ExpFunction>
 
 #definition(name: "階乗")[
   以下のように定義される関数$fnFrac : Nat2Nat(1)$を，冪乗と呼ぶ．
@@ -343,7 +343,7 @@
     fnFrac(succ(x)) &= (x + 1) times fnFrac(x)
   $
   また，略記として$fnFrac(x)$を$x!$とも書く．
-]<exp>
+]<Computability_FracFunction>
 
 #definition(name: "前者関数")[
   以下のように定義される関数$fnPred : Nat2Nat(1)$を，前者関数と呼ぶ．
@@ -351,7 +351,7 @@
     fnPred(0) &= 0 \
     fnPred(succ(x)) &= fnProj(2,1)(x, fnPred(x))
   $
-]<pred>
+]<Computability_PredFunction>
 
 #definition(name: "補正付き減算")[
   以下のように定義される関数$fnMsub : Nat2Nat(2)$を，補正付き減算と呼ぶ．
@@ -360,7 +360,7 @@
     fnMsub(x, succ(y)) &= fnPred(fnMsub(x, y))
   $
   また，中置記法として，$fnMsub(x,y)$を$x minus.dot y$とも書く．
-]<msub>
+]<Computability_MSubFunction>
 
 後で特性関数を定義するときに必要となる，次の関数も定義しておこう．
 
@@ -370,7 +370,7 @@
     fnIsZero(0) &= 1 \
     fnIsZero(succ(x)) &= 0
   $
-]<iszero>
+]<Computability_IsZeroFunction>
 
 #definition(name: "正数判定")[
   以下のように定義される関数$fnIsPos : Nat2Nat(1)$を，正数判定と呼ぶ．
@@ -378,13 +378,13 @@
     fnIsPos(0) &= 0 \
     fnIsPos(succ(x)) &= 1
   $
-]<iszero>
+]<Computability_IsPosFunction>
 
-ここまで定義した関数についても，やはり明らかに次の @is_primrec_2 が成り立つ．
+ここまで定義した関数についても，やはり明らかに次の @Computability_PrimRecFn2 が成り立つ．
 
 #corollary[
   冪乗$fnExp$，階乗$fnFrac$，前者関数$fnPred$，補正付き減算$fnMsub$，ゼロ判定$fnIsZero$，正数判定$fnIsPos$は原始再帰的関数である．
-]<is_primrec_2>
+]<Computability_PrimRecFn2>
 
 #definition(name: "有界総和")[
   関数$fn(f) : Nat2Nat(n+1)$について，以下のように定義される関数$fnBSum(fn(f)) : Nat2Nat(n+1)$を，有界総和と呼ぶ．
@@ -392,7 +392,7 @@
     fnBSum(fn(f))(vecx, 0) &= fn(f)(vecx, 0) \
     fnBSum(fn(f))(vecx, succ(y)) &= fn(f)(vecx, succ(y)) + fnBSum(fn(f))(vecx, y)
   $
-]<bounded_sum>
+]<Computability_BoundedSumFunction>
 
 #example(name: "有界総和の例")[
   有界総和の例を計算してみよう．
@@ -402,12 +402,12 @@
 ]
 
 #definition(name: "有界総乗")[
-  関数$fn(f) : Nat2Nat(n+1)$について，以下のように定義される関数$fnBMul(fn(f)) : Nat2Nat(n+1)$を，有界総和と呼ぶ．
+  関数$fn(f) : Nat2Nat(n+1)$について，以下のように定義される関数$fnBMul(fn(f)) : Nat2Nat(n+1)$を，有界総乗と呼ぶ．
   $
     fnBMul(fn(f))(vecx, 0) &= fn(f)(vecx, 0) \
     fnBMul(fn(f))(vecx, succ(y)) &= fn(f)(vecx, succ(y)) times fnBMul(fn(f))(vecx, y)
   $
-]<bounded_mul>
+]<Computability_BoundedMulFunction>
 
 #example(name: "有界総乗の例")[
   有界総乗の例を計算してみよう．
@@ -416,11 +416,11 @@
   - $fnBMul(fnAdd)(2, 3) = fnAdd(2, 3) times fnAdd(2, 2) times fnAdd(2, 1) times fnAdd(2, 0) = 240$
 ]
 
-有界総和と有界総乗についても自明に次の @is_primrec_3 が成り立つ．
+有界総和と有界総乗についても自明に次の @Computability_PrimRecFn3 が成り立つ．
 
 #corollary[
   $f: Nat2Nat(n+1)$が原始再帰的関数であるなら，有界総和$fnBSum(f)$，有界総乗$fnBMul(f)$は原始再帰的関数である．
-]<is_primrec_3>
+]<Computability_PrimRecFn3>
 
 === 原始再帰的関係
 
@@ -433,12 +433,11 @@
 #definition(name: "同値関係")[
   $x,y in Nat$について，「$x$と$y$は同数の$Rel(S)$を持っている」すなわち「$x$と$y$が等しい」という2項関係を同値関係といい，$REq subset.eq Nat^2$として表す．
   $(x,y) in REq$であることを，$x = y$とも書く．
-]
+]<Computability_REq>
 
 #theorem[
   同値関係$REq$は原始再帰的関係である．
-]<eq_is_prec>
-
+]<Computability_ReqIsPrimRec>
 #proof[
   実際，$charFn(REq)(x, y) = fnIsZero(x minus.dot y) + fnIsZero(y minus.dot x)$とすれば要件を満たす．
 ]
@@ -446,12 +445,11 @@
 #definition(name: "大小関係")[
   $x,y in Nat$について，「$y$は$x$より多くの$Rel(S)$を持っている」すなわち「$y$は$x$より大きい」という2項関係を同値関係といい，$RGt subset.eq Nat^2$として表す．
   $(x,y) in RGt$であることを，$x < y$とも書く．
-]<gt>
+]<Computability_RGt>
 
 #theorem[
   大小関係$RGt$は原始再帰的関係である．
-]<gt_is_prec>
-
+]<Computability_RGtIsPrimRec>
 #proof[
   実際，$charFn(RGt)(x, y) = fnIsPos(y minus.dot x)$とすれば要件を満たす．
 ]
@@ -463,19 +461,18 @@
   - $not Rel(R) := {vecx in Nat^n | vecx in.not Rel(R)}$．すなわち，「$Rel(R)$ではない」という否定．
   - $Rel(R) and Rel(S) := {vecx in Nat^n | vecx in Rel(R) sect Rel(S) }$．すなわち，「$Rel(R)$かつ$Rel(S)$」という連言．
   - $Rel(R) or Rel(S) := {vecx in Nat^n | vecx in Rel(R) union Rel(S) }$．すなわち，「$Rel(R)$または$Rel(S)$」という選言．
-]<propositional_logic_operation>
+]<Computability_RelLogicOperation>
 
 #theorem[
   関係$Rel(R),Rel(S) subset.eq Nat^n$が原始再帰的関係であるとき，関係$not Rel(R), Rel(R) and Rel(S), Rel(R) or Rel(S)$も原始再帰的関係である．
-]<propositional_logic_operation_prec>
-
+]<Computability_RelLogicOperationIsPrimRec>
 #proof[
   次のように特性関数を定義すれば，論理演算としての要件を満たす．
   - $charFn(not Rel(R))(vecx) := fnIsZero(charFn(Rel(R))(vecx))$
   - $charFn(Rel(R) and Rel(S))(vecx) := charFn(Rel(R))(vecx) times charFn(Rel(S))(vecx)$
   - $charFn(Rel(R) or Rel(S))(vecx) := fnIsPos(charFn(Rel(R))(vecx) + charFn(Rel(S))(vecx))$
 
-  このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，@is_primrec_1 や @is_primrec_2 より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
+  このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，@Computability_PrimRecFn1 や @Computability_PrimRecFn2 より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
 ]
 #remark(numbering: none)[
   $Rel(R) and Rel(S), Rel(R) or Rel(S)$の特性関数$charFn(Rel(R) and Rel(S))(vecx), charFn(Rel(R) or Rel(S))(vecx)$を観察すると，前者は乗算，後者は加算に基づいて特性関数が構成されている．このような対応から，連言と選言はそれぞれ論理積と論理和とも呼ばれる．
@@ -485,9 +482,9 @@
   2項関係$RNEq, RGte$とその略記を，以下のように定める．
   - $RNEq := not REq$とする．すなわち「$x$と$y$は等しくない」という関係であり，$x != y$とも書く．
   - $RGte := RGt or REq$とする．すなわち「$y$は$x$以上」という関係であり，$x <= y$とも書く．
-]<neq_gte>
+]
 
-@propositional_logic_operation_prec などより明らかに，次の系が成り立つ．
+@Computability_RelLogicOperationIsPrimRec などより明らかに，次の系が成り立つ．
 
 #corollary[
   関係$RNEq, RGte$は，原始再帰的関係である．
@@ -520,7 +517,7 @@
 #remark[
   証明によって構成された特性関数を注意深く観察すれば，有界量化の上界$m$を何らかの原始再帰関数によって与えても，その特性関数は原始再帰的関数となることがわかる．
   すなわち，$f:Nat2Nat(k)$が原始再帰関数であるなら，$RGteForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGteExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$は原始再帰的な$n + k$項関係となる．
-]<bounded_quantification_upper>
+]<Computability_BoundedQuantificationUpperRemark>
 
 便利なので，$<=$を$<$に置き換えた有界量化も定義しておこう．
 
@@ -538,10 +535,10 @@
   - $RGtForall(y, m, Rel(R)(vecx, y)) := RGteForall(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
   - $RGteExists(y, m, Rel(R)(vecx, y)) := RGteExists(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
 
-  これらが原始再帰的関係であることは，@propositional_logic_operation_prec より従う．
+  これらが原始再帰的関係であることは，@Computability_RelLogicOperationIsPrimRec より従う．
 ]
 #remark(numbering: none)[
-  @bounded_quantification_upper は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
+  @Computability_BoundedQuantificationUpperRemark は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
   すなわち，上界を何らかの原始再帰関数$fn(f)(accent(m, arrow))$によって与えた$RGtForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGtExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$もやはり原始再帰的な$n + k$項関係となる．
 ]
 
@@ -578,7 +575,7 @@
 ]
 #theorem[
   関係$RPrime$は原始再帰的関係である．
-]<rprime_is_primrec>
+]<Computability_RPrimeIsPrimRec>
 #proof[
   $RPrime(x) := (2 <= x) and not RGtExists(y, x, y != 1 and RDiv(x, y))$とすればよい．
 ]
@@ -630,16 +627,16 @@
   これが原始再帰的関数になることは明らか．
 ]
 #remark[
-  この証明で構成した関数をよく見れば，やはり@bounded_quantification_upper はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
-]<bounded_minimize_upper>
+  この証明で構成した関数をよく見れば，やはり@Computability_BoundedQuantificationUpperRemark はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
+]<Computability_BoundedMinificationUpperRemark>
 
 === $n$番目の素数の計算
 
-素数について成り立つ，次の定理 @next_prime_upper を用いることで，$i$番目の素数を出力する関数を原始再帰的関数として構成することが出来る．
+素数について成り立つ，次の定理 @Computability_NextPrimeSearchRange を用いることで，$i$番目の素数を出力する関数を原始再帰的関数として構成することが出来る．
 
 #theorem(name: "素数の探索範囲の上界について")[
   $p_n$が$n$番目の素数のとき，次の素数である$n + 1$番目の素数$p_(n+1)$は$p_n ! + 1$以下に存在する．
-]<next_prime_upper>
+]<Computability_NextPrimeSearchRange>
 #proof[
   TODO:
 ]
@@ -653,7 +650,7 @@
   関数$fnPrime$は原始再帰的関数である．
 ]
 #proof[
-  @next_prime_upper より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
+  @Computability_NextPrimeSearchRange より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
 
   したがって，所望の関数$fnPrime$は以下のように定義すればよい．
   $
@@ -662,9 +659,9 @@
   $
 
   これまでに次のことを証明してきた#footnote[もちろん，これより多くのことが後ろで積み上がっている．ここでは代表的なものを取り上げた．]．
-  - 階乗が原始再帰的関数として表せること．(@is_primrec_2)
-  - $RPrime$が原始再帰的関係であること．(@rprime_is_primrec)
-  - 有界最小化の上界を原始再帰的関数で定義してもよいこと． (@bounded_minimize_upper)
+  - 階乗が原始再帰的関数として表せること．(@Computability_PrimRecFn2)
+  - $RPrime$が原始再帰的関係であること．(@Computability_RPrimeIsPrimRec)
+  - 有界最小化の上界を原始再帰的関数で定義してもよいこと． (@Computability_BoundedMinificationUpperRemark)
 
   これらの結果を踏まえれば，定義した関数が原始再帰的であることは明らか．
 ]
@@ -690,7 +687,7 @@
 #definition(name: "アルファベット")[
   以下の8個の記号をアルファベットという．
   $ prime space.quad f space.quad P space.quad not space.quad -> space.quad exists space.quad hash space.quad triangle.r.small $
-]<fpl:alphabet>
+]<FOL_Alphabet>
 
 #definition(name: "略記")[
   - $f, P$を$n >= 1$個並べた記号列$underbrace(f dots.c f, n), underbrace(P dots.c P, n)$を，それぞれ$f_n, P_n$と略記する．
@@ -703,7 +700,7 @@
 
 #definition(name: "算術の言語")[
   よって特徴づけられる言語を，算術の言語$ArithmeticLanguage$という．
-]<fpl:lang_arithmetic>
+]<FOL_ArithmeticLanguage>
 
 = Gödelの第1不完全性定理
 
