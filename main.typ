@@ -438,6 +438,7 @@
 #theorem[
   同値関係$REq$は原始再帰的関係である．
 ]<Computability_ReqIsPrimRec>
+
 #proof[
   実際，$charFn(REq)(x, y) = fnIsZero(x minus.dot y) + fnIsZero(y minus.dot x)$とすれば要件を満たす．
 ]
@@ -450,6 +451,7 @@
 #theorem[
   大小関係$RGt$は原始再帰的関係である．
 ]<Computability_RGtIsPrimRec>
+
 #proof[
   実際，$charFn(RGt)(x, y) = fnIsPos(y minus.dot x)$とすれば要件を満たす．
 ]
@@ -466,6 +468,7 @@
 #theorem[
   関係$Rel(R),Rel(S) subset.eq Nat^n$が原始再帰的関係であるとき，関係$not Rel(R), Rel(R) and Rel(S), Rel(R) or Rel(S)$も原始再帰的関係である．
 ]<Computability_RelLogicOperationIsPrimRec>
+
 #proof[
   次のように特性関数を定義すれば，論理演算としての要件を満たす．
   - $charFn(not Rel(R))(vecx) := fnIsZero(charFn(Rel(R))(vecx))$
@@ -474,6 +477,7 @@
 
   このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，@Computability_PrimRecFn1 や @Computability_PrimRecFn2 より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
 ]
+
 #remark(numbering: none)[
   $Rel(R) and Rel(S), Rel(R) or Rel(S)$の特性関数$charFn(Rel(R) and Rel(S))(vecx), charFn(Rel(R) or Rel(S))(vecx)$を観察すると，前者は乗算，後者は加算に基づいて特性関数が構成されている．このような対応から，連言と選言はそれぞれ論理積と論理和とも呼ばれる．
 ]
@@ -530,6 +534,7 @@
 #theorem[
   関係$Rel(R) subset.eq Nat^n$が原始再帰的関係であるとき，関係$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$は原始再帰的関係である．
 ]
+
 #proof[
   以下のように特性関数を定義すれば要件を満たす．
   - $RGtForall(y, m, Rel(R)(vecx, y)) := RGteForall(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
@@ -537,6 +542,7 @@
 
   これらが原始再帰的関係であることは，@Computability_RelLogicOperationIsPrimRec より従う．
 ]
+
 #remark(numbering: none)[
   @Computability_BoundedQuantificationUpperRemark は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
   すなわち，上界を何らかの原始再帰関数$fn(f)(accent(m, arrow))$によって与えた$RGtForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGtExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$もやはり原始再帰的な$n + k$項関係となる．
@@ -551,6 +557,7 @@
 #theorem[
   関係$REven$は原始再帰的関係である．
 ]
+
 #proof[
   $REven(x) := RGteExists(y, x, x = 2 times y)$とすればよい．
 ]
@@ -560,12 +567,15 @@
 #definition[
   $x in Nat$について，「$x$は$y$の約数個の$Rel(S)$を持っている」すなわち「$x$は$y$で割り切れる」という2項関係を$RDiv subset.eq Nat^2$として表す．
 ]
+
 #theorem[
   関係$RDiv$は原始再帰的関係である．
 ]
+
 #proof[
   $RDiv(x,y) := RGteExists(z, x, x = y times z)$とすればよい．
 ]
+
 #remark(numbering: none)[
   定義より明らかに，$RDiv(x,2)$は$REven$となる．
 ]
@@ -573,9 +583,11 @@
 #definition[
   $x in Nat$について，「$x$は素数個の$Rel(S)$を持っている」すなわち「$x$は素数である」という1項関係を$RPrime subset.eq Nat$として表す．なお，$0, 1$は素数ではないとする．
 ]
+
 #theorem[
   関係$RPrime$は原始再帰的関係である．
 ]<Computability_RPrimeIsPrimRec>
+
 #proof[
   $RPrime(x) := (2 <= x) and not RGtExists(y, x, y != 1 and RDiv(x, y))$とすればよい．
 ]
@@ -597,6 +609,7 @@
 #theorem[
   関係$Rel(R) subset.eq Nat^n$が原始再帰的関係，関数$fn(f), fn(g) : Nat2Nat(n)$が原始再帰的関数であるとき，関数$(fnBCase(Rel(R), fn(f), fn(g))) : Nat2Nat(n)$も原始再帰的関数である．
 ]
+
 #proof[
   $(fnBCase(Rel(R), fn(f), fn(g)))(vecx) := charFn(Rel(R))(vecx) times fn(f)(vecx) + chi_(not Rel(R))(vecx) times fn(g)(vecx)$と定義すれば要件を満たし，これが原始再帰的関数になることは明らか．
 ]
@@ -617,6 +630,7 @@
 #theorem[
   関係$Rel(R) subset.eq Nat^(n + 1)$が原始再帰的関係であるとき，有界最小化関数$fnBMinimize(y, m, Rel(R)(vecx, y)) : Nat2Nat(n+1)$は原始再帰的関数である．
 ]
+
 #proof[
   以下のように定義すれば要件を満たす．
   $
@@ -626,6 +640,7 @@
 
   これが原始再帰的関数になることは明らか．
 ]
+
 #remark[
   この証明で構成した関数をよく見れば，やはり@Computability_BoundedQuantificationUpperRemark はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
 ]<Computability_BoundedMinificationUpperRemark>
@@ -637,6 +652,7 @@
 #theorem(name: "素数の探索範囲の上界について")[
   $p_n$が$n$番目の素数のとき，次の素数である$n + 1$番目の素数$p_(n+1)$は$p_n ! + 1$以下に存在する．
 ]<Computability_NextPrimeSearchRange>
+
 #proof[
   TODO:
 ]
@@ -649,6 +665,7 @@
 #theorem[
   関数$fnPrime$は原始再帰的関数である．
 ]
+
 #proof[
   @Computability_NextPrimeSearchRange より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
 
