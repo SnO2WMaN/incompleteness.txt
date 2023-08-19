@@ -26,6 +26,11 @@
   stroke: 1pt,
   inset: 1em
 )
+#show thm-selector("thm-group", subgroup: "lemma"): it => box(
+  it,
+  stroke: (thickness: 1pt, dash: "dotted"),
+  inset: 1em
+)
 #show thm-selector("thm-group", subgroup: "corollary"): it => box(
   it,
   stroke: 1pt,
@@ -67,8 +72,6 @@
   strong(it)
 }
 #outline(indent: auto)
-
-#pagebreak()
 
 #let TODO(content) = emph("TODO:" + content)
 
@@ -124,6 +127,35 @@
 #let RGteExists(y, m, r) = $exists_(#y <= #m).[#r]$
 #let RGtForall(y, m, r) = $forall_(#y < #m).[#r]$
 #let RGtExists(y, m, r) = $exists_(#y < #m).[#r]$
+
+#let GoedelNum(x) = $┌ #x ┐$
+#let NumTerm(x) = $overline(#x)$
+#let GoedelNumTerm(x) = $NumTerm(GoedelNum(#x))$
+
+#let GoedelSentence = $G$
+#let RosserSentence = $R$
+#let HenkinSentence = $H$
+#let JeroslowSentence = $J$
+
+#let Provability(T, content) = $serif("Pr")_(#T)(content)$
+#let RosserProvability(T, content) = $serif("Pr")^serif("Ro")_(#T)(content)$
+#let Consistency(T) = $serif("Con")_#T$
+#let RosserConsistency(T) = $serif("Con")^serif("Ro")_#T$
+
+#let Drv1 = $bold(serif("D1"))$
+#let Drv2 = $bold(serif("D2"))$
+#let Drv3 = $bold(serif("D3"))$
+
+#let proves = $tack.r$
+#let notproves = $tack.r.not$
+
+#let models = $tack.r.double$
+#let notmodels = $tack.r.double.not$
+
+#let TheoryT = $T$
+#let TheoryU = $U$
+
+#let StandardArithmeticModel = $cal(N)$
 
 = はじめに
 
@@ -714,23 +746,251 @@
 
 == 算術の言語
 
-
 #definition(name: "算術の言語")[
   よって特徴づけられる言語を，算術の言語$ArithmeticLanguage$という．
 ]<FOL_ArithmeticLanguage>
 
 = Gödelの第1不完全性定理
 
+== 可証性述語
+
+#theorem[
+  $
+    T proves sigma ==> T proves Provability(TheoryT, GoedelNumTerm(sigma))
+  $
+]<GoedelIT_Drv1>
+
+== Gödelの不動点補題
+
+#theorem(name: "Gödelの不動点補題")[
+  $x$のみを自由変項とする任意の論理式$phi(x)$について，次を満たす文$sigma$を構成することが出来る．
+
+  $
+    T proves sigma <-> phi(GoedelNumTerm(sigma))
+  $
+
+  このとき，$phi(x)$が$Sigma_n$論理式であるならば，$sigma$は$Sigma_n$文となる．同様に，$phi(x)$が$Pi_n$論理式であるならば，$sigma$は$Pi_n$文となる．
+]<GoedelFPLemma>
+
+#definition(name: "Gödel文")[
+  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題 @GoedelFPLemma によって構成される次の文$GoedelSentence$を，理論$TheoryT$のGödel文という．
+  $
+    TheoryT proves GoedelSentence <-> not Provability(TheoryT, GoedelNumTerm(GoedelSentence))
+  $
+]<GoedelSentence>
+
+#theorem(name: "Gödelの第1不完全性定理")[
+  $TheoryT$を$PeanoArithmetic$の再帰的可算な拡大理論であるとし，$GoedelSentence$を$TheoryT$のGödel文とする．このとき，以下が成り立つ．
+  - $TheoryT$が無矛盾ならば，$TheoryT notproves GoedelSentence$．
+  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT notproves not GoedelSentence$．
+
+  故に，$TheoryT$が無矛盾かつ$Sigma_1$健全ならば，$TheoryT$は不完全である．
+]<GoedelIT1>
+
+#proof(name: $T notproves GoedelSentence$ + "の証明")[
+  + $TheoryT proves GoedelSentence$だと仮定する．
+  + @GoedelIT_Drv1 より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$であり，$GoedelSentence$の定義より$TheoryT proves not GoedelSentence$となる．
+  + 纏めれば$T proves G$かつ$T notproves G$であるが，$TheoryT$は無矛盾であると前提しているため，この議論は破綻する．
+
+  よって仮定がおかしく，$TheoryT notproves GoedelSentence$である．
+]
+
+#proof(name: $T notproves not GoedelSentence$ + "の証明")[
+  + $TheoryT proves not GoedelSentence$だと仮定する．
+  + $GoedelSentence$の定義より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$となる．
+  + $Provability(TheoryT, GoedelNumTerm(GoedelSentence))$が$Sigma_1$文であるため，$TheoryT$が$Sigma_1$健全であることから$StandardArithmeticModel models Provability(TheoryT, GoedelNumTerm(GoedelSentence))$となる．
+  + $StandardArithmeticModel models Provability(TheoryT, GoedelNumTerm(GoedelSentence))$と$T proves G$は同値である．
+  + 纏めれば$T proves not GoedelSentence$かつ$T proves GoedelSentence$であるが，$TheoryT$は$Sigma_1$健全すなわち無矛盾であると前提しているため，この議論は破綻する．
+
+  よって仮定がおかしく，$TheoryT notproves not GoedelSentence$である．
+]
+
+#remark(name: "Gödel文の真偽")[
+  Gödel文の定義より，以下が成り立つ．
+  $
+    StandardArithmeticModel models GoedelSentence <=> StandardArithmeticModel models not Provability(TheoryT, GoedelNumTerm(GoedelSentence))<=> T notproves GoedelSentence
+  $
+
+  ここで，#underline[$T$が無矛盾であると仮定するならば] @GoedelIT1 より$TheoryT notproves G$であるので$StandardArithmeticModel models GoedelSentence$である．
+  しかしながら，@GoedelIT1 はGödel文は証明も反証も出来ないということ，すなわちGödel文の証明可能性についてだけ触れているのであって，Gödel文の真偽については何も触れていないことに注意せよ．
+
+  Gödel文の真偽は$T$が#underline[実際に]無矛盾であるかどうかに依存しており，その事実は第1不完全性定理によって示されたりはしない．
+  故に，第1不完全性定理を「正しいが証明は出来ない言明が存在する」と短絡的に帰結することは若干の危険または誤りがある．
+]
+
 == Gödel-Rosserの第1不完全性定理
+
+@GoedelIT1 において，不完全性を示す#footnote[より細かく言えば$TheoryT notproves not GoedelSentence$であることを示すことを．]ためには，無矛盾性より強い条件である$Sigma_1$健全性を仮定せざるを得なかった．
+この仮定を無矛盾性に弱められることがRosserによって示されている．そのためには，可証性述語を少し変更して，Rosser可証性述語と呼ばれるものに置き換える必要がある．
 
 === Rosser可証性述語
 
+#definition(name: "Rosser可証性述語")[
+]<RosserProvability>
+
 = Gödelの第2不完全性定理
+
+ここでは，$TheoryT$とは算術の理論の拡大とする．
+
+== 導出可能性条件
+
+#definition(name: "Hilbert-Bernays-Löbの導出可能性条件")[
+  $sigma,pi$を文とする．
+  $TheoryT$の可証性述語$Provability(TheoryT,x)$について，次の条件$Drv1,Drv2,Drv3$を，Hilbert-Bernays-Löbの導出可能性条件と呼ぶ．
+  $
+    Drv1 &: T proves sigma ==> T proves Provability(TheoryT, GoedelNumTerm(sigma)) \
+    Drv2 &: T proves Provability(TheoryT, GoedelNumTerm(sigma -> pi)) -> (Provability(TheoryT, GoedelNumTerm(sigma)) -> Provability(TheoryT, GoedelNumTerm(pi))) \
+    Drv3 &: T proves Provability(TheoryT, GoedelNumTerm(sigma)) -> Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(sigma)))) \
+  $
+]<DerivabilityCondition>
+
+#definition(name: "標準的可証性述語")[
+  $Drv1,Drv2,Drv3$を満たす理論$TheoryT$の可証性述語$Provability(TheoryT, x)$を，標準的可証性述語という．
+]
+
+#definition(name: "無矛盾性を表す文")[
+  $TheoryT$で反証可能な$Sigma_1$文を1つ取ってきて$bot$とする#footnote[すなわち，$TheoryT proves not bot$である．]．
+  $TheoryT$の無矛盾性を表す文$Consistency(TheoryT) := not Provability(TheoryT, GoedelNumTerm(bot))$と定義する．
+]<Consistency>
+
+#remark[
+  $Consistency(TheoryT)$は$Pi_1$文である．
+]
+
+#theorem(name: "形式化された" + $Sigma_1$ + "完全性定理")[
+  任意の$Sigma_1$文$sigma$に対して次が成立する．
+  $
+    TheoryT proves sigma -> Provability(TheoryT, GoedelNumTerm(sigma))
+  $
+]<FormalizedSigma1Completeness>
+
+#lemma[
+  $Provability(TheoryT, x)$が標準的可証性述語であるとき，
+  任意の文$sigma$に対して次が成立する．
+  $
+    TheoryT proves not Provability(TheoryT, GoedelNumTerm(sigma)) -> Consistency(TheoryT)
+  $
+]<GoedelIT2_GoedelSentenceConsistencyEquality_lem1>
+
+#let TheoryU = $U$
+#lemma[
+  任意の$PeanoArithmetic$の拡大理論$TheoryU$と任意の文$sigma$に対して次が成立する．
+  $
+    U proves Provability(TheoryT, GoedelNumTerm(sigma)) -> Provability(TheoryT, GoedelNumTerm(sigma)) ==> TheoryU proves Consistency(T) -> not Provability(TheoryT, GoedelNumTerm(sigma))
+  $
+]<GoedelIT2_GoedelSentenceConsistencyEquality_lem2>
+
+#lemma[
+  任意の$TheoryT$のGödel文$GoedelSentence$に対して次が成立する．
+  $
+    TheoryT proves Consistency(TheoryT) -> not Provability(T, GoedelNumTerm(GoedelSentence))
+  $
+]<GoedelIT2_GoedelSentenceConsistencyEquality_lem3>
+
+#proof[
+  + $not GoedelSentence$は$Sigma_1$文であるので，形式化された$Sigma_1$完全性定理 @FormalizedSigma1Completeness より$TheoryT proves not G -> Provability(TheoryT, GoedelNumTerm(not GoedelSentence))$．
+  + $GoedelSentence$の定義より，$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> not G$．
+  + 1,2より，$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> Provability(TheoryT, GoedelNumTerm(not GoedelSentence))$．
+  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem2 と3より，$TheoryT proves Consistency(TheoryT) -> not Provability(TheoryT, GoedelNumTerm(GoedelSentence))$．
+  以上で示された．
+]
+
+#theorem(name: "Gödel文と無矛盾性の同値性")[
+  $TheoryT$のGödel文$GoedelSentence$と，$TheoryT$の無矛盾性を表す文$Consistency(TheoryT)$とが，標準的可証性述語によって構成されているとき，次が成立する．
+  $
+    TheoryT proves GoedelSentence <-> Consistency(TheoryT)
+  $
+]<GoedelIT2_GoedelSentenceConsistencyEquality>
+
+#proof[
+  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem1 に$GoedelSentence$を適用して$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> Consistency(TheoryT)$．
+  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem3 と1を合わせて，$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) <-> Consistency(TheoryT)$．
+  + Gödel文の定義より，$TheoryT proves GoedelSentence <-> Consistency(TheoryT)$．
+  以上で示された．
+]
+
+@GoedelIT2_GoedelSentenceConsistencyEquality より，明らかに次の系が成り立つ．
+
+#corollary[
+  任意の$TheoryT$のGödel文$GoedelSentence,GoedelSentence'$に対して$TheoryT proves GoedelSentence <-> GoedelSentence'$
+]
+
+#theorem(name: "Gödelの第2不完全性定理")[
+  $TheoryT$が$PeanoArithmetic$の再帰的可算な拡大理論であるとする．このとき，以下が成り立つ．
+  - $TheoryT$が無矛盾ならば，$TheoryT notproves Consistency(TheoryT)$
+  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT notproves not Consistency(TheoryT)$
+]<GoedelIT2>
+
+#proof[
+  第1不完全性定理 @GoedelIT1 と Gödel文と無矛盾性の同値性 @GoedelIT2_GoedelSentenceConsistencyEquality より従う．
+]
 
 == Kreiselの注意
 
-= Robinson算術についての第2不完全性定理
+@GoedelIT2 においてもGödel-Rosserの第1不完全性定理のように$Sigma_1$健全を弱めることが出来ないのだろうか？これは出来ないのである．
 
+#theorem[
+  Rosser可証性述語は導出可能性条件$Drv2,Drv3$を同時に満たさない．
+]
+
+#corollary(name: "Kreiselの注意")[
+  $TheoryT proves not RosserProvability(TheoryT, GoedelNumTerm(bot))$．ただし$bot$は @Consistency での用法と同じ#footnote[すなわち例えば文$0 = 1$などのことを指す．]とする．
+
+  言い換えれば，@Consistency で用いる可証性述語としてRosser可証性述語を利用して無矛盾性を表した文$RosserConsistency(TheoryT) := not RosserProvability(TheoryT, GoedelNumTerm(bot))$を構成した場合は，第2不完全性定理は成り立たない．
+]
+
+= Löbの定理
+
+Gödelの不動点補題と可証性述語を組み合わせると，様々な自己言及的な文を構成することが出来る．
+Gödel文は自己の証明不可能性を主張する文として定義されたが，逆に，自己の証明可能性を主張する文を考えるとどんなことが起こるのか考えてみよう．
+
+#definition(name: "Henkin文")[
+  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題 @GoedelFPLemma によって構成される次の文$HenkinSentence$を，理論$TheoryT$のHenkin文という．
+  $
+    TheoryT proves HenkinSentence <-> Provability(TheoryT, GoedelNumTerm(HenkinSentence))
+  $
+]<HenkinSentence>
+
+このとき，#underline[Henkin文は$TheoryT$で証明可能なのか？]という問題がHenkinによって提案された．この問題はLöbによって，より一般的な形で解決された．
+
+#theorem(name: "Löbの定理")[
+  任意の文$sigma$に対して次が成立する．
+  $
+    TheoryT proves sigma <==> TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma
+  $
+]
+
+$==>$については自明なので，問題は$<==$を証明することである．この証明には第2不完全性定理を使う証明と使わない証明がある．
+
+Löbの定理で文$sigma$を$HenkinSentence$とすればHenkinの問題は解決される．
+#corollary[
+  $TheoryT proves HenkinSentence$である．
+]
+
+== Löbの定理の意義
+
+== 第2不完全性定理を用いた証明
+
+== オリジナルのLöbの証明
+
+=== 第2不完全性定理の証明
+
+オリジナルのLöbの証明では第2不完全性定理を用いていないが，Löbの定理から逆に第2不完全性定理を証明することも出来る．
+
+== 形式化されたLöbの定理
+
+Löbの定理は形式化することが可能である．
+
+#theorem(name: "形式化されたLöbの定理")[
+  任意の文$sigma$に対して次が成立する．
+  $
+    TheoryT proves Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma)) -> Provability(TheoryT, GoedelNumTerm(sigma))
+  $
+]
+
+後に$Provability(TheoryT, x)$を単なる様相演算子$square$として見ることになるが，その際に重要な働きとなる．
+
+= Robinson算術についての第2不完全性定理
 
 = 算術$WeakestArithmetic$について
 
