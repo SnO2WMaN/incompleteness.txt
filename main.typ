@@ -72,6 +72,59 @@
 
 #let TODO(content) = emph("TODO:" + content)
 
+#let Theory(a) = $upright(sans(#a))$
+#let PeanoArithmetic = $Theory("PA")$
+#let RobinsonArithmetic = $Theory("Q")$
+#let WeakestArithmetic = $Theory("R")$
+
+#let Language = $cal("L")$
+#let ArithmeticLanguage = $Language_sans("A")$
+
+#let Nat = $bb("N")$
+#let Nat2Nat(n) = $Nat^#n -> Nat$
+#let vec(x) = $accent(#x, arrow)$
+#let vecx = $vec(x)$
+#let vecy = $vec(y)$
+
+#let charFn(R) = $chi_(#R)$
+
+#let succ = $serif("s")$
+
+#let fn(txt) = $upright(serif(txt))$
+#let fnConst(n,c) = $fn("const")^(#n)_(#c)$
+#let fnSucc = $fn("succ")$
+#let fnProj(n,i) = $fn("proj")^(#n)_(#i)$
+#let fnComp = $fn("comp")$
+#let fnPrec(f,g) = $fn("prec")_(#f,#g)$
+#let fnZero(n) = $fn("zero")^#n$
+#let fnId = $fn("id")$
+#let fnAdd = $fn("add")$
+#let fnMul = $fn("mul")$
+#let fnExp = $fn("exp")$
+#let fnFrac = $fn("frac")$
+#let fnPred = $fn("pred")$
+#let fnMsub = $fn("msub")$
+#let fnIsZero = $fn("iszero")$
+#let fnIsPos = $fn("ispos")$
+#let fnBSum(f) = $Sigma_(#f)$
+#let fnBMul(f) = $Pi_(#f)$
+#let fnBCase(R,f,g) = $"if" #R "then" #f "else" #g$
+#let fnBMinimize(y, m, R) = $mu_(#y <= #m).[#R]$
+#let fnPrime = $fn("pr")$
+
+#let Rel(txt) = $upright(serif(txt))$
+#let REq = $Rel("Eq")$
+#let RGt = $Rel("Gt")$
+#let REven = $Rel("Even")$
+#let RNEq = $Rel("NEq")$
+#let RGte = $Rel("Gte")$
+#let RDiv = $Rel("Div")$
+#let RPrime = $Rel("Prime")$
+#let RGteForall(y, m, r) = $forall_(#y <= #m).[#r]$
+#let RGteExists(y, m, r) = $exists_(#y <= #m).[#r]$
+#let RGtForall(y, m, r) = $forall_(#y < #m).[#r]$
+#let RGtExists(y, m, r) = $exists_(#y < #m).[#r]$
+
 = はじめに
 
 この文書は不完全性定理についての諸々をまとめたものです．
@@ -130,35 +183,30 @@
   // あとで書く．
 ]
 
-#let FNat = $mono("N")$
-#let vecx = $accent(mono(x), arrow)$
 
 #definition(name: "関係")[
-  $n >= 0$に対し，$FNat^n$の部分集合$mono(R) subset.eq FNat^n$を，$n$項関係という．
+  $n >= 0$に対し，$Nat^n$の部分集合$Rel(R) subset.eq Nat^n$を，$n$項関係という．
 ]<relation>
 
-#let REq = $mono("Eq")$
-#let RGt = $mono("Gt")$
-#let REven = $mono("Even")$
 #example(name: "関係の例")[
-  - 「$mono(x)$と$mono(y)$は同数の$mono(s)$を持っている」すなわち「$mono(x)$が$mono(y)$が等しい」という関係$REq$は，2項関係である．$REq = {(mono(0),mono(0)), (mono(1),mono(1)), (mono(2),mono(2)),dots}$．
-  - 「$mono(y)$は$mono(x)$より多くの$mono(s)$を持っている」すなわち「$mono(y)$は$mono(x)$より大きい」という関係$RGt$は，2項関係である．$RGt = {(mono(0),mono(1)), (mono(0),mono(2)), (mono(1),mono(3)),dots}$．
-  - 偶数の集合は1項関係である．$REven = {mono(0),mono(2),mono(4),...}$．
+  - 「$x$と$y$は同数の$Rel(S)$を持っている」すなわち「$x$が$y$が等しい」という関係$REq$は，2項関係である．$REq = {(0,0), (1,1), (2,2),dots}$．
+  - 「$y$は$x$より多くの$Rel(S)$を持っている」すなわち「$y$は$x$より大きい」という関係$RGt$は，2項関係である．$RGt = {(0,1), (0,2), (1,3),dots}$．
+  - 偶数の集合は1項関係である．$REven = {0,2,4,...}$．
 ]<relation_examples>
 
 #definition(name: "特性関数")[
-  $n$項関係$mono(R) subset.eq FNat^n$に対し，次の関数$chi_mono(R) : FNat^n -> FNat$を，$mono(R)$の特性関数という．
+  $n$項関係$Rel(R) subset.eq Nat^n$に対し，次の関数$charFn(Rel(R)) : Nat2Nat(n)$を，$Rel(R)$の特性関数という．
 
   $
-  chi_mono(R)(vecx) =
+  charFn(Rel(R))(vecx) =
   cases(
-    mono(1) "if" vecx in mono(R),
-    mono(0) "if" vecx in.not mono(R),
+    1 "if" vecx in Rel(R),
+    0 "if" vecx in.not Rel(R),
   )
   $
 ]<characteristic_function>
 
-// 部分集合というものをそのまま経由せず，特性関数という関数に依って特徴づけられる$FNat^n$の部分集合を関係と呼ぶ，のように定義した方が良い気もする．
+// 部分集合というものをそのまま経由せず，特性関数という関数に依って特徴づけられる$Nat^n$の部分集合を関係と呼ぶ，のように定義した方が良い気もする．
 
 == 原始再帰的
 
@@ -166,40 +214,35 @@
 
 まずは原始再帰的な関数の定義を与えよう．
 
-#let fconst(n,c) = $serif("const")^(#n)_mono(#c)$
 #definition(name: "定数関数")[
-  $n$個の引数$vecx$を受け取るが，それらを全て破棄して$mono(c)$を返す関数を，定数関数といい，$fconst(n, c) : FNat^n -> FNat$で表す．
+  $n$個の引数$vecx$を受け取るが，それらを全て破棄して$c$を返す関数を，定数関数といい，$fnConst(n, c) : Nat2Nat(n)$で表す．
 
-  すなわち，$fconst(n,c)(vecx) = mono(c)$である．
+  すなわち，$fnConst(n,c)(vecx) = c$である．
 ]<constant_function>
 
-#let fsucc = $serif("succ")$
 #definition(name: "後者関数")[
-  受け取った自然数の次の自然数を返す関数を，後者関数といい，$fsucc : FNat -> FNat$で表す．
+  受け取った自然数の次の自然数を返す関数を，後者関数といい，$fnSucc : Nat2Nat(1)$で表す．
 
-  すなわち，$fsucc(mono(x)) = mono("s(x)")$である．
+  すなわち，$fnSucc(x) = succ(x)$である．
 ]<successor_function>
 
-#let fproj(n,i) = $serif("proj")^(#n)_(#i)$
 #definition(name: "射影関数")[
-  $n$個の引数$mono(x)_1,...,mono(x)_n$を受け取り，そのうち$i$番目の引数を返す関数を，射影関数といい，$fproj(n,i) : FNat^n -> FNat$で表す．
+  $n$個の引数$x_1,...,x_n$を受け取り，そのうち$i$番目の引数を返す関数を，射影関数といい，$fnProj(n,i) : Nat2Nat(n)$で表す．
 
-  すなわち，$fproj(n,i) (mono(x)_1,...,mono(x)_n) = mono(x)_i$である．
+  すなわち，$fnProj(n,i) (x_1,...,x_n) = x_i$である．
 ]<projection_function>
 
-#let fcomp = $serif("comp")$
 #definition(name: "関数合成")[
-  $n$変数関数$serif(f) : FNat^n -> FNat$と，$n$個の$m$変数関数$serif(g)_1,...,serif(g)_n : FNat^m -> FNat$が与えられたとき，以下のように定義される$m$変数関数$fcomp_(serif("f"),serif("g")_1,...,serif("g")_n) : FNat^m -> FNat$を，$serif("f"),serif("g")_1,...,serif("g")_n$の関数合成という．
-  $ fcomp_(serif("f"),serif("g")_1,...,serif("g")_n)(vecx) = serif("f")(serif("g")_1 (vecx),...,serif("g")_n (vecx)) $
+  $n$変数関数$fn(f) : Nat2Nat(n)$と，$n$個の$m$変数関数$fn(g)_1,...,fn(g)_n : Nat2Nat(m)$が与えられたとき，以下のように定義される$m$変数関数$fnComp_(fn(f),fn(g)_1,...,fn(g)_n) : Nat2Nat(m)$を，$fn(f),fn(g)_1,...,fn(g)_n$の関数合成という．
+  $ fnComp_(fn(f),fn(g)_1,...,fn(g)_n)(vecx) = fn(f)(fn(g)_1 (vecx),...,fn(g)_n (vecx)) $
   ここで，$vecx$は$m$個の引数とする．
 ]<function_composition>
 
-#let fprec(f,g) = $serif("prec")_(#f,#g)$
 #definition(name: "原始再帰")[，
-  $n$変数関数$serif(f) : FNat^n -> FNat$と，$n+2$変数関数$serif(g) : FNat^(n+2) -> FNat$が与えられたとき，以下のように定義される$n$変数関数$fprec(serif("f"),serif("g")) : FNat^n -> FNat$を，$serif("f"),serif("g")$の原始再帰という．
+  $n$変数関数$fn(f) : Nat2Nat(n)$と，$n+2$変数関数$fn(g) : Nat2Nat(n+2)$が与えられたとき，以下のように定義される$n$変数関数$fnPrec(fn(f),fn(g)) : Nat2Nat(n)$を，$fn(f),fn(g)$の原始再帰という．
   $
-  fprec(serif("f"),serif("g"))(vecx, mono(0)) &= f(vecx) \
-  fprec(serif("f"),serif("g"))(vecx, mono("s(y)")) &= g(vecx, mono(y), serif("prec")_(serif("f"),serif("g"))(vecx, mono("y")))
+  fnPrec(fn(f),fn(g))(vecx, 0) &= fn(f)(vecx) \
+  fnPrec(fn(f),fn(g))(vecx, succ(y)) &= fn(g)(vecx, y, fnPrec(fn(f),fn(g))(vecx, y))
   $
   ここで，$vecx$は$m$個の引数とする．
 ]<primitive_recursive>
@@ -219,64 +262,60 @@
 
 前述したとおり，自然数についての初等的な関数の殆どが原始再帰的である．見ていこう．
 
-#let fid = $serif("id")$
 #definition(name: "恒等関数")[
-  $fid : FNat -> FNat := fproj(1, 1)$と定義される関数を，恒等関数とよぶ．
-  すなわち，$fid(mono(x)) = mono(x)$である．
-]<fzero>
+  $fnId : Nat2Nat(1) := fnProj(1, 1)$と定義される関数を，恒等関数とよぶ．
+  すなわち，$fnId(x) = x$である．
+]<fnZero>
 
-#let fzero(n) = $serif("zero")^#n$
 #definition(name: "ゼロ関数")[
-  $fzero(n) : FNat^n -> FNat := fconst(n, 0)$と定義される関数を，$n$変数ゼロ関数とよぶ．
-  すなわち，$fzero(n)(vecx) = mono(0)$である．
-]<fzero>
+  $fnZero(n) : Nat2Nat(n) := fnConst(n, 0)$と定義される関数を，$n$変数ゼロ関数とよぶ．
+  すなわち，$fnZero(n)(vecx) = 0$である．
+]<fnZero>
 
-#let fadd = $serif("add")$
 #definition(name: "加算")[
-  以下のように定義される関数$fadd : FNat^2 -> FNat$を，加算と呼ぶ．
-  $ fadd := fprec(fid,fcomp_(fsucc, fproj(3,3))) $
+  以下のように定義される関数$fnAdd : Nat2Nat(2)$を，加算と呼ぶ．
+  $ fnAdd := fnPrec(fnId,fnComp_(fnSucc, fnProj(3,3))) $
 
   合成と原始再帰を外して簡約すると，以下のようになる．
   $
-    fadd(mono(x), mono(0)) &= fid(mono(x)) \
-    fadd(mono(x), mono("s(y)")) &= fsucc(fproj(3,3)(mono(x), mono(y), fadd(mono(x), mono(y))))
+    fnAdd(x, 0) &= fnId(x) \
+    fnAdd(x, succ(y)) &= fnSucc(fnProj(3,3)(x, y, fnAdd(x, y)))
   $
 
-  また，中置記法として，$fadd(x,y)$を$mono(x) + mono(y)$とも書く．
+  また，中置記法として，$fnAdd(x,y)$を$x + y$とも書く．
 ]<add>
 
 #example(name: "加算の例")[
-  $fadd$の挙動を確認して，たしかに加算となっていることを確認しよう．
+  $fnAdd$の挙動を確認して，たしかに加算となっていることを確認しよう．
 
-  $fadd(mono(2), mono(3)) = mono(5)$である．
+  $fnAdd(2, 3) = 5$である．
   // #TODO
 ]<add_example>
 
-#let fmul = $serif("mul")$
 #definition(name: "乗算")[
-  以下のように定義される関数$fmul : FNat^2 -> FNat$を，乗算と呼ぶ．
-  $ fmul := fprec(fzero(1),fcomp_(fadd, fproj(3,1), fproj(3,3))) $
+  以下のように定義される関数$fnMul : Nat2Nat(2)$を，乗算と呼ぶ．
+  $ fnMul := fnPrec(fnZero(1),fnComp_(fnAdd, fnProj(3,1), fnProj(3,3))) $
 
   合成と原始再帰を外して，よりわかりやすく書くと
   $
-    fmul(mono(x), mono(0)) &= fzero(1)(mono(x)) \
-    fmul(mono(x), mono("s(y)")) &= fadd(fproj(3,1)(mono(x), mono(y), fmul(mono(x), mono(y))), fproj(3,3)(mono(x), mono(y), fmul(mono(x), mono(y))))
+    fnMul(x, 0) &= fnZero(1)(x) \
+    fnMul(x, succ(y)) &= fnAdd(fnProj(3,1)(x, y, fnMul(x, y)), fnProj(3,3)(x, y, fnMul(x, y)))
   $
 
-  また，中置記法として，$fmul(x,y)$を$mono(x) times mono(y)$とも書く．
+  また，中置記法として，$fnMul(x,y)$を$x times y$とも書く．
 ]<mul>
 
 #example(name: "乗算の例")[
-  $fmul$の挙動を確認して，たしかに乗算となっていることを確認しよう．
+  $fnMul$の挙動を確認して，たしかに乗算となっていることを確認しよう．
 
-  $fadd(mono(2), mono(3)) = mono(6)$である．
+  $fnAdd(2, 3) = 6$である．
   // #TODO
 ]<mul_example>
 
 ここまで定義した関数について，定義より明らかに次の @is_primrec_1 が成り立つ．
 
 #corollary[
-  恒等関数$fid$，ゼロ関数$fzero$，加算$fadd$，乗算$fmul$は原始再帰的関数である．
+  恒等関数$fnId$，ゼロ関数$fnZero$，加算$fnAdd$，乗算$fnMul$は原始再帰的関数である．
 ]<is_primrec_1>
 
 さて，更に関数を定義していきたいが，毎回 @add や @mul のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
@@ -285,123 +324,115 @@
 #remark[
   以下の略記を用いてもよいとする．
   - 最も外側の原始再帰は外して定義する．
-  - $fconst(n,c), fproj(n,i), fid$は明らかなら省略する．
+  - $fnConst(n,c), fnProj(n,i), fnId$は明らかなら省略する．
 ]<primrec_abbrev>
 
-#let fexp = $serif("exp")$
 #definition(name: "冪乗")[
-  以下のように定義される関数$fexp : FNat^2 -> FNat$を，冪乗と呼ぶ．
+  以下のように定義される関数$fnExp : Nat2Nat(2)$を，冪乗と呼ぶ．
   $
-    fexp(mono(x), mono(0)) &= mono(1) \
-    fexp(mono(x), mono("s(x)")) &= mono(x) times fexp(mono(x), mono(y))
+    fnExp(x, 0) &= 1 \
+    fnExp(x, succ(x)) &= x times fnExp(x, y)
   $
-  また，略記として$fexp(mono(x),mono(y))$を$mono(x)^mono(y)$とも書く．
+  また，略記として$fnExp(x,y)$を$x^y$とも書く．
 ]<exp>
 
-#let ffrac = $serif("frac")$
 #definition(name: "階乗")[
-  以下のように定義される関数$ffrac : FNat -> FNat$を，冪乗と呼ぶ．
+  以下のように定義される関数$fnFrac : Nat2Nat(1)$を，冪乗と呼ぶ．
   $
-    ffrac(mono(0)) &= mono(1) \
-    ffrac(mono("s(x)")) &= (mono(x) + mono(1)) times ffrac(mono(x))
+    fnFrac(0) &= 1 \
+    fnFrac(succ(x)) &= (x + 1) times fnFrac(x)
   $
-  また，略記として$ffrac(mono(x))$を$mono(x)!$とも書く．
+  また，略記として$fnFrac(x)$を$x!$とも書く．
 ]<exp>
 
-#let fpred = $serif("pred")$
 #definition(name: "前者関数")[
-  以下のように定義される関数$fpred : FNat -> FNat$を，前者関数と呼ぶ．
+  以下のように定義される関数$fnPred : Nat2Nat(1)$を，前者関数と呼ぶ．
   $
-    fpred(mono(0)) &= mono(0) \
-    fpred(mono("s(x)")) &= fproj(2,1)(mono(x), fpred(mono(x)))
+    fnPred(0) &= 0 \
+    fnPred(succ(x)) &= fnProj(2,1)(x, fnPred(x))
   $
 ]<pred>
 
-#let fmsub = $serif("msub")$
 #definition(name: "補正付き減算")[
-  以下のように定義される関数$fmsub : FNat^2 -> FNat$を，補正付き減算と呼ぶ．
+  以下のように定義される関数$fnMsub : Nat2Nat(2)$を，補正付き減算と呼ぶ．
   $
-    fmsub(mono(x), mono(0)) &= mono(0) \
-    fmsub(mono(x), mono("s(y)")) &= fpred(fmsub(mono(x), mono(y)))
+    fnMsub(x, 0) &= 0 \
+    fnMsub(x, succ(y)) &= fnPred(fnMsub(x, y))
   $
-  また，中置記法として，$fmsub(x,y)$を$mono(x) minus.dot mono(y)$とも書く．
+  また，中置記法として，$fnMsub(x,y)$を$x minus.dot y$とも書く．
 ]<msub>
 
 後で特性関数を定義するときに必要となる，次の関数も定義しておこう．
 
-#let fisZero = $serif("isZero")$
 #definition(name: "ゼロ判定")[
-  以下のように定義される関数$fisZero : FNat -> FNat$を，ゼロ判定と呼ぶ．
+  以下のように定義される関数$fnIsZero : Nat2Nat(1)$を，ゼロ判定と呼ぶ．
   $
-    fisZero(mono(0)) &= mono(1) \
-    fisZero(mono("s(x)")) &= mono(0)
+    fnIsZero(0) &= 1 \
+    fnIsZero(succ(x)) &= 0
   $
 ]<iszero>
 
-#let fisPos = $serif("isPos")$
 #definition(name: "正数判定")[
-  以下のように定義される関数$fisPos : FNat -> FNat$を，正数判定と呼ぶ．
+  以下のように定義される関数$fnIsPos : Nat2Nat(1)$を，正数判定と呼ぶ．
   $
-    fisPos(mono(0)) &= mono(0) \
-    fisPos(mono("s(x)")) &= mono(1)
+    fnIsPos(0) &= 0 \
+    fnIsPos(succ(x)) &= 1
   $
 ]<iszero>
 
 ここまで定義した関数についても，やはり明らかに次の @is_primrec_2 が成り立つ．
 
 #corollary[
-  冪乗$fexp$，階乗$ffrac$，前者関数$fpred$，補正付き減算$fmsub$，ゼロ判定$fisZero$，正数判定$fisPos$は原始再帰的関数である．
+  冪乗$fnExp$，階乗$fnFrac$，前者関数$fnPred$，補正付き減算$fnMsub$，ゼロ判定$fnIsZero$，正数判定$fnIsPos$は原始再帰的関数である．
 ]<is_primrec_2>
 
-#let fbsum(f) = $Sigma_(#f)$
 #definition(name: "有界総和")[
-  関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbsum(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
+  関数$fn(f) : Nat2Nat(n+1)$について，以下のように定義される関数$fnBSum(fn(f)) : Nat2Nat(n+1)$を，有界総和と呼ぶ．
   $
-    fbsum(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
-    fbsum(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) + fbsum(serif(f))(vecx, mono(y))
+    fnBSum(fn(f))(vecx, 0) &= fn(f)(vecx, 0) \
+    fnBSum(fn(f))(vecx, succ(y)) &= fn(f)(vecx, succ(y)) + fnBSum(fn(f))(vecx, y)
   $
 ]<bounded_sum>
 
 #example(name: "有界総和の例")[
   有界総和の例を計算してみよう．
-  - $fbsum(fid)(mono(3)) = fid(mono(3)) + fid(mono(2)) + fid(mono(1)) + fid(mono(0)) = mono(6)$
-  - $fbsum(fsucc)(mono(3)) = fsucc(mono(3)) + fsucc(mono(2)) + fsucc(mono(1)) + fsucc(mono(0)) = mono(10)$
-  - $fbsum(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) + fadd(mono(2), mono(2)) + fadd(mono(2), mono(1)) + fadd(mono(2), mono(0)) = mono(14)$
+  - $fnBSum(fnId)(3) = fnId(3) + fnId(2) + fnId(1) + fnId(0) = 6$
+  - $fnBSum(fnSucc)(3) = fnSucc(3) + fnSucc(2) + fnSucc(1) + fnSucc(0) = 10$
+  - $fnBSum(fnAdd)(2, 3) = fnAdd(2, 3) + fnAdd(2, 2) + fnAdd(2, 1) + fnAdd(2, 0) = 14$
 ]
 
-#let fbmul(f) = $Pi_(#f)$
 #definition(name: "有界総乗")[
-  関数$serif(f) : FNat^(n+1) -> FNat$について，以下のように定義される関数$fbmul(serif(f)) : FNat^(n+1) -> FNat$を，有界総和と呼ぶ．
+  関数$fn(f) : Nat2Nat(n+1)$について，以下のように定義される関数$fnBMul(fn(f)) : Nat2Nat(n+1)$を，有界総和と呼ぶ．
   $
-    fbmul(serif(f))(vecx, mono(0)) &= serif(f)(vecx, mono(0)) \
-    fbmul(serif(f))(vecx, mono("s(y)")) &= serif(f)(vecx, mono("s(y)")) times fbmul(serif(f))(vecx, mono(y))
+    fnBMul(fn(f))(vecx, 0) &= fn(f)(vecx, 0) \
+    fnBMul(fn(f))(vecx, succ(y)) &= fn(f)(vecx, succ(y)) times fnBMul(fn(f))(vecx, y)
   $
 ]<bounded_mul>
 
 #example(name: "有界総乗の例")[
   有界総乗の例を計算してみよう．
-  - $fbmul(fid)(mono(3)) = fid(mono(3)) times fid(mono(2)) times fid(mono(1)) times fid(mono(0)) = mono(0)$
-  - $fbmul(fsucc)(mono(3)) = fsucc(mono(3)) times fsucc(mono(2)) times fsucc(mono(1)) times fsucc(mono(0)) = mono(24)$
-  - $fbmul(fadd)(mono(2), mono(3)) = fadd(mono(2), mono(3)) times fadd(mono(2), mono(2)) times fadd(mono(2), mono(1)) times fadd(mono(2), mono(0)) = mono(240)$
+  - $fnBMul(fnId)(3) = fnId(3) times fnId(2) times fnId(1) times fnId(0) = 0$
+  - $fnBMul(fnSucc)(3) = fnSucc(3) times fnSucc(2) times fnSucc(1) times fnSucc(0) = 24$
+  - $fnBMul(fnAdd)(2, 3) = fnAdd(2, 3) times fnAdd(2, 2) times fnAdd(2, 1) times fnAdd(2, 0) = 240$
 ]
 
 有界総和と有界総乗についても自明に次の @is_primrec_3 が成り立つ．
 
 #corollary[
-  $f: FNat^(n+1) -> FNat$が原始再帰的関数であるなら，有界総和$fbsum(f)$，有界総乗$fbmul(f)$は原始再帰的関数である．
+  $f: Nat2Nat(n+1)$が原始再帰的関数であるなら，有界総和$fnBSum(f)$，有界総乗$fnBMul(f)$は原始再帰的関数である．
 ]<is_primrec_3>
 
 === 原始再帰的関係
 
 #definition(name: "原始再帰的関係")[
-  関係$mono(R) subset.eq FNat^n$の特性関数$chi_mono(R)$が原始再帰的関数であるとき，$mono(R)$は原始再帰的関係であるという．
+  関係$Rel(R) subset.eq Nat^n$の特性関数$charFn(Rel(R))$が原始再帰的関数であるとき，$Rel(R)$は原始再帰的関係であるという．
 ]
 
 @relation_examples で見た関係は，いずれも原始再帰的関係である．
 
 #definition(name: "同値関係")[
-  $mono(x),mono(y) in FNat$について，「$mono(x)$と$mono(y)$は同数の$mono(s)$を持っている」すなわち「$mono(x)$と$mono(y)$が等しい」という2項関係を同値関係といい，$REq subset.eq FNat^2$として表す．
-  $(mono(x),mono(y)) in REq$であることを，$mono(x) = mono(y)$とも書く．
+  $x,y in Nat$について，「$x$と$y$は同数の$Rel(S)$を持っている」すなわち「$x$と$y$が等しい」という2項関係を同値関係といい，$REq subset.eq Nat^2$として表す．
+  $(x,y) in REq$であることを，$x = y$とも書く．
 ]
 
 #theorem[
@@ -409,12 +440,12 @@
 ]<eq_is_prec>
 
 #proof[
-  実際，$chi_mono(REq)(mono(x), mono(y)) = fisZero(mono(x) minus.dot mono(y)) + fisZero(mono(y) minus.dot mono(x))$とすれば要件を満たす．
+  実際，$charFn(REq)(x, y) = fnIsZero(x minus.dot y) + fnIsZero(y minus.dot x)$とすれば要件を満たす．
 ]
 
 #definition(name: "大小関係")[
-  $mono(x),mono(y) in FNat$について，「$mono(y)$は$mono(x)$より多くの$mono(s)$を持っている」すなわち「$mono(y)$は$mono(x)$より大きい」という2項関係を同値関係といい，$RGt subset.eq FNat^2$として表す．
-  $(mono(x),mono(y)) in RGt$であることを，$mono(x) < mono(y)$とも書く．
+  $x,y in Nat$について，「$y$は$x$より多くの$Rel(S)$を持っている」すなわち「$y$は$x$より大きい」という2項関係を同値関係といい，$RGt subset.eq Nat^2$として表す．
+  $(x,y) in RGt$であることを，$x < y$とも書く．
 ]<gt>
 
 #theorem[
@@ -422,40 +453,38 @@
 ]<gt_is_prec>
 
 #proof[
-  実際，$chi_mono(RGt)(mono(x), mono(y)) = fisPos(mono(y) minus.dot mono(x))$とすれば要件を満たす．
+  実際，$charFn(RGt)(x, y) = fnIsPos(y minus.dot x)$とすれば要件を満たす．
 ]
 
 偶数の集合が原始再帰的関係であることを示すために，まずはいくつかの論理演算を用意する．
 
 #definition(name: "関係の論理演算")[
-  $n$項関係$mono(R),mono(S) subset.eq FNat^n$について，関係$not mono(R), mono(R) and mono(S), mono(R) or mono(S)$を次のように定める．
-  - $not mono(R) := {vecx in FNat^n | vecx in.not mono(R)}$．すなわち，「$mono(R)$ではない」という否定．
-  - $mono(R) and mono(S) := {vecx in FNat^n | vecx in mono(R) sect mono(S) }$．すなわち，「$mono(R)$かつ$mono(S)$」という連言．
-  - $mono(R) or mono(S) := {vecx in FNat^n | vecx in mono(R) union mono(S) }$．すなわち，「$mono(R)$または$mono(S)$」という選言．
+  $n$項関係$Rel(R),Rel(S) subset.eq Nat^n$について，関係$not Rel(R), Rel(R) and Rel(S), Rel(R) or Rel(S)$を次のように定める．
+  - $not Rel(R) := {vecx in Nat^n | vecx in.not Rel(R)}$．すなわち，「$Rel(R)$ではない」という否定．
+  - $Rel(R) and Rel(S) := {vecx in Nat^n | vecx in Rel(R) sect Rel(S) }$．すなわち，「$Rel(R)$かつ$Rel(S)$」という連言．
+  - $Rel(R) or Rel(S) := {vecx in Nat^n | vecx in Rel(R) union Rel(S) }$．すなわち，「$Rel(R)$または$Rel(S)$」という選言．
 ]<propositional_logic_operation>
 
 #theorem[
-  関係$mono(R),mono(S) subset.eq FNat^n$が原始再帰的関係であるとき，関係$not mono(R), mono(R) and mono(S), mono(R) or mono(S)$も原始再帰的関係である．
+  関係$Rel(R),Rel(S) subset.eq Nat^n$が原始再帰的関係であるとき，関係$not Rel(R), Rel(R) and Rel(S), Rel(R) or Rel(S)$も原始再帰的関係である．
 ]<propositional_logic_operation_prec>
 
 #proof[
   次のように特性関数を定義すれば，論理演算としての要件を満たす．
-  - $chi_mono(not mono(R))(vecx) := fisZero(chi_mono(mono(R))(vecx))$
-  - $chi_mono(mono(R) and mono(S))(vecx) := chi_mono(mono(R))(vecx) times chi_mono(mono(S))(vecx)$
-  - $chi_mono(mono(R) or mono(S))(vecx) := fisPos(chi_mono(mono(R))(vecx) + chi_mono(mono(S))(vecx))$
+  - $charFn(not Rel(R))(vecx) := fnIsZero(charFn(Rel(R))(vecx))$
+  - $charFn(Rel(R) and Rel(S))(vecx) := charFn(Rel(R))(vecx) times charFn(Rel(S))(vecx)$
+  - $charFn(Rel(R) or Rel(S))(vecx) := fnIsPos(charFn(Rel(R))(vecx) + charFn(Rel(S))(vecx))$
 
-  このとき仮定より$mono(R),mono(S)$の特性関数$chi_mono(R),chi_mono(S)$は原始再帰的関数であるので，@is_primrec_1 や @is_primrec_2 より，$chi_mono(not mono(R)),chi_mono(mono(R) and mono(S)),chi_mono(mono(R) or mono(S))$も原始再帰的関数となる．
+  このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，@is_primrec_1 や @is_primrec_2 より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
 ]
 #remark(numbering: none)[
-  $mono(R) and mono(S), mono(R) or mono(S)$の特性関数$chi_mono(mono(R) and mono(S))(vecx), chi_mono(mono(R) or mono(S))(vecx)$を観察すると，前者は乗算，後者は加算に基づいて特性関数が構成されている．このような対応から，連言と選言はそれぞれ論理積と論理和とも呼ばれる．
+  $Rel(R) and Rel(S), Rel(R) or Rel(S)$の特性関数$charFn(Rel(R) and Rel(S))(vecx), charFn(Rel(R) or Rel(S))(vecx)$を観察すると，前者は乗算，後者は加算に基づいて特性関数が構成されている．このような対応から，連言と選言はそれぞれ論理積と論理和とも呼ばれる．
 ]
 
-#let RNEq = $mono("NEq")$
-#let RGte = $mono("Gte")$
 #definition[
   2項関係$RNEq, RGte$とその略記を，以下のように定める．
-  - $RNEq := not REq$とする．すなわち「$mono(x)$と$mono(y)$は等しくない」という関係であり，$mono(x) != mono(y)$とも書く．
-  - $RGte := RGt or REq$とする．すなわち「$mono(y)$は$mono(x)$以上」という関係であり，$mono(x) <= mono(y)$とも書く．
+  - $RNEq := not REq$とする．すなわち「$x$と$y$は等しくない」という関係であり，$x != y$とも書く．
+  - $RGte := RGt or REq$とする．すなわち「$y$は$x$以上」という関係であり，$x <= y$とも書く．
 ]<neq_gte>
 
 @propositional_logic_operation_prec などより明らかに，次の系が成り立つ．
@@ -464,152 +493,144 @@
   関係$RNEq, RGte$は，原始再帰的関係である．
 ]
 
-#let RGteForall(y, m, r) = $forall_(#y <= #m).[#r]$
-#let RGteExists(y, m, r) = $exists_(#y <= #m).[#r]$
 #definition(name: "有界量化")[
-  $n + 1$項関係$mono(R) subset.eq FNat^(n + 1)$について，次のような$n+1$項関係を定める．
-  - $RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$は「$mono(m)$以下の全ての$mono(y)$で，$mono(R)(vecx, mono(y))$が成立する」を表す関係で，有界全称量化と呼ぶ．
-  - $RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は「$mono(m)$以下のある$mono(y)$で，$mono(R)(vecx, mono(y))$が成立する」を表す関係で，有界存在量化と呼ぶ．
+  $n + 1$項関係$Rel(R) subset.eq Nat^(n + 1)$について，次のような$n+1$項関係を定める．
+  - $RGteForall(y, m, Rel(R)(vecx, y))$は「$m$以下の全ての$y$で，$Rel(R)(vecx, y)$が成立する」を表す関係で，有界全称量化と呼ぶ．
+  - $RGteExists(y, m, Rel(R)(vecx, y))$は「$m$以下のある$y$で，$Rel(R)(vecx, y)$が成立する」を表す関係で，有界存在量化と呼ぶ．
 
   2つを合わせて，有界量化とも呼ぶ．
 ]
 
 #remark(numbering: none)[
-  自由変数は$vecx, mono(m)$であって，$mono(y)$は束縛変数であることに注意せよ．すなわち，$(vecx, mono(m)) in RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$を確かめているのであって，$(vecx, mono(y)) in RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$ではない．$RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$も同様．
+  自由変数は$vecx, m$であって，$y$は束縛変数であることに注意せよ．すなわち，$(vecx, m) in RGteForall(y, m, Rel(R)(vecx, y))$を確かめているのであって，$(vecx, y) in RGteForall(y, m, Rel(R)(vecx, y))$ではない．$RGteExists(y, m, Rel(R)(vecx, y))$も同様．
 ]
 
 #theorem[
-  関係$mono(R) subset.eq FNat^n$が原始再帰的関係であるとき，関係$RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は原始再帰的関係である．
+  関係$Rel(R) subset.eq Nat^n$が原始再帰的関係であるとき，関係$RGteForall(y, m, Rel(R)(vecx, y))$と$RGteExists(y, m, Rel(R)(vecx, y))$は原始再帰的関係である．
 ]
 
 #proof[
   次のように特性関数を定義すれば，有界量化としての要件を満たす．
-  - $chi_mono(RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y))))(vecx) := fbmul(chi_mono(R))(vecx, mono(y)) = chi_mono(R)(vecx, mono(0)) times chi_mono(R)(vecx, mono(1)) times dots.c times chi_mono(R)(vecx, mono(m))$
-  - $chi_mono(RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y))))(vecx) := fisPos(fbsum(chi_mono(R))(vecx, mono(y))) = fisPos(chi_mono(R)(vecx, mono(0)) + chi_mono(R)(vecx, mono(1)) + dots.c + chi_mono(R)(vecx, mono(m)))$
+  - $charFn(RGteForall(y, m, Rel(R)(vecx, y)))(vecx) := fnBMul(charFn(Rel(R)))(vecx, y) = charFn(Rel(R))(vecx, 0) times charFn(Rel(R))(vecx, 1) times dots.c times charFn(Rel(R))(vecx, m)$
+  - $charFn(RGteExists(y, m, Rel(R)(vecx, y)))(vecx) := fnIsPos(fnBSum(charFn(Rel(R)))(vecx, y)) = fnIsPos(charFn(Rel(R))(vecx, 0) + charFn(Rel(R))(vecx, 1) + dots.c + charFn(Rel(R))(vecx, m))$
 
-  このとき定義より$mono(R)$の特性関数$chi_mono(R)(vecx, mono(y))$が原始再帰的関数であるので，関係$RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$も原始再帰的関係である．
+  このとき定義より$Rel(R)$の特性関数$charFn(Rel(R))(vecx, y)$が原始再帰的関数であるので，関係$RGteForall(y, m, Rel(R)(vecx, y))$と$RGteExists(y, m, Rel(R)(vecx, y))$も原始再帰的関係である．
 ]
 
 #remark[
-  証明によって構成された特性関数を注意深く観察すれば，有界量化の上界$mono(m)$を何らかの原始再帰関数によって与えても，その特性関数は原始再帰的関数となることがわかる．
-  すなわち，$f:FNat^k -> FNat$が原始再帰関数であるなら，$RGteForall(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$や$RGteExists(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$は原始再帰的な$n + k$項関係となる．
+  証明によって構成された特性関数を注意深く観察すれば，有界量化の上界$m$を何らかの原始再帰関数によって与えても，その特性関数は原始再帰的関数となることがわかる．
+  すなわち，$f:Nat2Nat(k)$が原始再帰関数であるなら，$RGteForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGteExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$は原始再帰的な$n + k$項関係となる．
 ]<bounded_quantification_upper>
 
 便利なので，$<=$を$<$に置き換えた有界量化も定義しておこう．
 
-#let RGtForall(y, m, r) = $forall_(#y < #m).[#r]$
-#let RGtExists(y, m, r) = $exists_(#y < #m).[#r]$
 #definition[
-  $n + 1$項関係$mono(R) subset.eq FNat^(n + 1)$について，次のような関係を定める．
-  - $RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$は「$mono(m)$より小さい全ての$mono(y)$で，$mono(R)(vecx, mono(y))$が成立する」を表す関係とする．
-  - $RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は「$mono(m)$より小さいある$mono(y)$で，$mono(R)(vecx, mono(y))$が成立する」を表す関係とする．
+  $n + 1$項関係$Rel(R) subset.eq Nat^(n + 1)$について，次のような関係を定める．
+  - $RGtForall(y, m, Rel(R)(vecx, y))$は「$m$より小さい全ての$y$で，$Rel(R)(vecx, y)$が成立する」を表す関係とする．
+  - $RGtExists(y, m, Rel(R)(vecx, y))$は「$m$より小さいある$y$で，$Rel(R)(vecx, y)$が成立する」を表す関係とする．
 ]
 
 #theorem[
-  関係$mono(R) subset.eq FNat^n$が原始再帰的関係であるとき，関係$RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$は原始再帰的関係である．
+  関係$Rel(R) subset.eq Nat^n$が原始再帰的関係であるとき，関係$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$は原始再帰的関係である．
 ]
 #proof[
   以下のように特性関数を定義すれば要件を満たす．
-  - $RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y))) := RGteForall(mono(y), mono(m), mono(R)(vecx, mono(y))) and not mono(R)(vecx, mono(m))$
-  - $RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y))) := RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y))) and not mono(R)(vecx, mono(m))$
+  - $RGtForall(y, m, Rel(R)(vecx, y)) := RGteForall(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
+  - $RGteExists(y, m, Rel(R)(vecx, y)) := RGteExists(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
 
   これらが原始再帰的関係であることは，@propositional_logic_operation_prec より従う．
 ]
 #remark(numbering: none)[
-  @bounded_quantification_upper は$RGtForall(mono(y), mono(m), mono(R)(vecx, mono(y)))$と$RGtExists(mono(y), mono(m), mono(R)(vecx, mono(y)))$についても成り立つ．
-  すなわち，上界を何らかの原始再帰関数$f(accent(mono(m), arrow))$によって与えた$RGtForall(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$や$RGtExists(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$もやはり原始再帰的な$n + k$項関係となる．
+  @bounded_quantification_upper は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
+  すなわち，上界を何らかの原始再帰関数$fn(f)(accent(m, arrow))$によって与えた$RGtForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGtExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$もやはり原始再帰的な$n + k$項関係となる．
 ]
 
 ここまでの準備によって，偶数の集合が原始再帰的関係であることを示すことができる．
 
 #definition[
-  $mono(x) in FNat$について，「$mono(x)$は偶数個の$mono(s)$を持っている」すなわち「$mono(x)$は偶数である」という1項関係を$REven subset.eq FNat$として表す．
+  $x in Nat$について，「$x$は偶数個の$Rel(S)$を持っている」すなわち「$x$は偶数である」という1項関係を$REven subset.eq Nat$として表す．
 ]
 
 #theorem[
   関係$REven$は原始再帰的関係である．
 ]
 #proof[
-  $REven(mono(x)) := RGteExists(mono(y), mono(x), mono(x) = mono(2) times mono(y))$とすればよい．
+  $REven(x) := RGteExists(y, x, x = 2 times y)$とすればよい．
 ]
 
 更に様々な関係も原始再帰的関係として表すことができる．
 
-#let RDiv = $mono("Div")$
 #definition[
-  $mono(x) in FNat$について，「$mono(x)$は$mono(y)$の約数個の$mono(s)$を持っている」すなわち「$mono(x)$は$mono(y)$で割り切れる」という2項関係を$RDiv subset.eq FNat^2$として表す．
+  $x in Nat$について，「$x$は$y$の約数個の$Rel(S)$を持っている」すなわち「$x$は$y$で割り切れる」という2項関係を$RDiv subset.eq Nat^2$として表す．
 ]
 #theorem[
   関係$RDiv$は原始再帰的関係である．
 ]
 #proof[
-  $RDiv(mono(x),mono(y)) := RGteExists(mono(z), mono(x), mono(x) = mono(y) times mono(z))$とすればよい．
+  $RDiv(x,y) := RGteExists(z, x, x = y times z)$とすればよい．
 ]
 #remark(numbering: none)[
-  定義より明らかに，$RDiv(mono(x),mono(2))$は$REven$となる．
+  定義より明らかに，$RDiv(x,2)$は$REven$となる．
 ]
 
-#let RPrime = $mono("Prime")$
 #definition[
-  $mono(x) in FNat$について，「$mono(x)$は素数個の$mono(s)$を持っている」すなわち「$mono(x)$は素数である」という1項関係を$RPrime subset.eq FNat$として表す．なお，$mono(0), mono(1)$は素数ではないとする．
+  $x in Nat$について，「$x$は素数個の$Rel(S)$を持っている」すなわち「$x$は素数である」という1項関係を$RPrime subset.eq Nat$として表す．なお，$0, 1$は素数ではないとする．
 ]
 #theorem[
   関係$RPrime$は原始再帰的関係である．
 ]<rprime_is_primrec>
 #proof[
-  $RPrime(mono(x)) := (mono(2) <= mono(x)) and not RGtExists(mono(y), mono(x), mono(y) != mono(1) and RDiv(mono(x), mono(y)))$とすればよい．
+  $RPrime(x) := (2 <= x) and not RGtExists(y, x, y != 1 and RDiv(x, y))$とすればよい．
 ]
 
 === 場合分け関数と有界最小化
 
-#let fbcase(R,f,g) = $("if" #R "then" #f "else" #g)$
 #definition(name: "場合分け関数")[
-  関係$mono(R) subset.eq FNat^n$と関数$serif(f), serif(g) : FNat^n -> FNat$について，以下のように定義される関数$fbcase(mono(R), serif(f), serif(g)) : FNat^n -> FNat$を，場合分け関数と呼ぶ．
+  関係$Rel(R) subset.eq Nat^n$と関数$fn(f), fn(g) : Nat2Nat(n)$について，以下のように定義される関数$(fnBCase(Rel(R), fn(f), fn(g))) : Nat2Nat(n)$を，場合分け関数と呼ぶ．
   $
-    fbcase(mono(R), serif(f), serif(g))(vecx) := cases(
-      serif(f)(vecx) "if" vecx in mono(R),
-      serif(g)(vecx) "if" vecx in.not mono(R)
+    (fnBCase(Rel(R), fn(f), fn(g)))(vecx) := cases(
+      fn(f)(vecx) "if" vecx in Rel(R),
+      fn(g)(vecx) "if" vecx in.not Rel(R)
     )
   $
 
-  煩雑な場合は，$fbcase(mono(R), serif(f), serif(g))(vecx)$を$"if" mono(R)(vecx) "then" serif(f)(vecx) "else" serif(g)(vecx)$とも略記する．
+  煩雑な場合は，$(fnBCase(Rel(R), fn(f), fn(g)))(vecx)$を$fnBCase(Rel(R)(vecx), fn(f)(vecx), fn(g)(vecx))$とも略記する．
 ]
 
 #theorem[
-  関係$mono(R) subset.eq FNat^n$が原始再帰的関係，関数$serif(f), serif(g) : FNat^n -> FNat$が原始再帰的関数であるとき，関数$fbcase(mono(R), serif(f), serif(g)) : FNat^n -> FNat$も原始再帰的関数である．
+  関係$Rel(R) subset.eq Nat^n$が原始再帰的関係，関数$fn(f), fn(g) : Nat2Nat(n)$が原始再帰的関数であるとき，関数$(fnBCase(Rel(R), fn(f), fn(g))) : Nat2Nat(n)$も原始再帰的関数である．
 ]
 #proof[
-  $fbcase(mono(R), serif(f), serif(g))(vecx) := chi_mono(R)(vecx) times serif(f)(vecx) + chi_(not mono(R))(vecx) times serif(g)(vecx)$と定義すれば要件を満たし，これが原始再帰的関数になることは明らか．
+  $(fnBCase(Rel(R), fn(f), fn(g)))(vecx) := charFn(Rel(R))(vecx) times fn(f)(vecx) + chi_(not Rel(R))(vecx) times fn(g)(vecx)$と定義すれば要件を満たし，これが原始再帰的関数になることは明らか．
 ]
 
-#let fminimize(y, m, R) = $mu_(#y <= #m).[#R]$
 #let textm(content) = text(font: "Noto Serif CJK JP", weight: "regular", content)
 
 #definition(name: "有界最小化関数")[
-  $n+1$項関係$mono(R) subset.eq FNat^(n + 1)$に対し，以下のように定義される$n+1$項関数$fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) : FNat^(n+1) -> FNat$を，有界最小化関数と呼ぶ．
+  $n+1$項関係$Rel(R) subset.eq Nat^(n + 1)$に対し，以下のように定義される$n+1$項関数$fnBMinimize(y, m, Rel(R)(vecx, y)) : Nat2Nat(n+1)$を，有界最小化関数と呼ぶ．
   $
-    fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) :=
+    fnBMinimize(y, m, Rel(R)(vecx, y)) :=
     cases(
-      mono(k) quad #textm[$mono(m)$以下の$mono(y)$のうち，$mono(R)(vecx, mono(y))$を成立させる最小の$mono(y)$が$mono(k)$として存在するとき],
-      mono(m) quad #textm[そのような$mono(y)$が存在しないとき]
+      k quad #textm[$m$以下の$y$のうち，$Rel(R)(vecx, y)$を成立させる最小の$y$が$k$として存在するとき],
+      m quad #textm[そのような$y$が存在しないとき]
     )
   $
 ]
 
 #theorem[
-  関係$mono(R) subset.eq FNat^(n + 1)$が原始再帰的関係であるとき，有界最小化関数$fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) : FNat^(n+1) -> FNat$は原始再帰的関数である．
+  関係$Rel(R) subset.eq Nat^(n + 1)$が原始再帰的関係であるとき，有界最小化関数$fnBMinimize(y, m, Rel(R)(vecx, y)) : Nat2Nat(n+1)$は原始再帰的関数である．
 ]
 #proof[
   以下のように定義すれば要件を満たす．
   $
-    fminimize(mono(y), mono(0), mono(R)(vecx, mono(y))) &= mono(0) \
-    fminimize(mono(y), mono("s(m)"), mono(R)(vecx, mono(y))) &= "if" RGteExists(mono(y), mono(m), mono(R)(vecx, mono(y))) "then" fminimize(mono(y), mono(m), mono(R)(vecx, mono(y))) "else" mono("s(m)")
+    fnBMinimize(y, 0, Rel(R)(vecx, y)) &= 0 \
+    fnBMinimize(y, s(m), Rel(R)(vecx, y)) &= fnBCase(RGteExists(y, m, Rel(R)(vecx, y)) , fnBMinimize(y, m, Rel(R)(vecx, y)), s(m))
   $
 
   これが原始再帰的関数になることは明らか．
 ]
 #remark[
-  この証明で構成した関数をよく見れば，やはり@bounded_quantification_upper はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:FNat^k -> FNat$によって与えた$fminimize(mono(y), f(accent(mono(m), arrow)), mono(R)(vecx, mono(y)))$も，やはり原始再帰的関数として構成できる．
+  この証明で構成した関数をよく見れば，やはり@bounded_quantification_upper はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
 ]<bounded_minimize_upper>
 
 === $n$番目の素数の計算
@@ -623,22 +644,21 @@
   TODO:
 ]
 
-#let fprime = $sans("p")$
 #definition[
-  $n$番目の素数を出力する関数を，$fprime(n) : FNat -> FNat$とする．
-  ただし，素数は0番目から数えるとする．すなわち，$fprime(mono(0)) = mono(2), fprime(mono(1)) = mono(3), ...$である．
+  $n$番目の素数を出力する関数を，$fnPrime(n) : Nat2Nat(1)$とする．
+  ただし，素数は0番目から数えるとする．すなわち，$fnPrime(0) = 2, fnPrime(1) = 3, ...$である．
 ]
 
 #theorem[
-  関数$fprime$は原始再帰的関数である．
+  関数$fnPrime$は原始再帰的関数である．
 ]
 #proof[
-  @next_prime_upper より次の素数の探索範囲は$fprime(mono(n))! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
+  @next_prime_upper より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
 
-  したがって，所望の関数$fprime$は以下のように定義すればよい．
+  したがって，所望の関数$fnPrime$は以下のように定義すればよい．
   $
-    fprime(mono(0)) &:= mono(2) \
-    fprime(mono("s(n)")) &:= fminimize(mono(y), fprime(mono(n))! + 1, fprime(mono(n)) < mono(y) and RPrime(mono(y)))
+    fnPrime(0) &:= 2 \
+    fnPrime(succ(n)) &:= fnBMinimize(y, fnPrime(n)! + 1, fnPrime(n) < y and RPrime(y))
   $
 
   これまでに次のことを証明してきた#footnote[もちろん，これより多くのことが後ろで積み上がっている．ここでは代表的なものを取り上げた．]．
@@ -652,12 +672,12 @@
 #example[
   本当になっているか確かめてみよう．
 
-  - $fprime(mono(1)) = fminimize(mono(y), fprime(mono(0))! + 1, fprime(mono(0)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y),
-  mono(3), mono(2) < mono(y) and RPrime(mono(y))) = mono(3)$
-  - $fprime(mono(2)) = fminimize(mono(y), fprime(mono(1))! + 1, fprime(mono(1)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(7), mono(3) < mono(y) and RPrime(mono(y))) = mono(5)$
-  - $fprime(mono(3)) = fminimize(mono(y), fprime(mono(2))! + 1, fprime(mono(2)) < mono(y) and RPrime(mono(y))) = fminimize(mono(y), mono(121), mono(5) < mono(y) and RPrime(mono(y))) = mono(7)$
+  - $fnPrime(1) = fnBMinimize(y, fnPrime(0)! + 1, fnPrime(0) < y and RPrime(y)) = fnBMinimize(y,
+  3, 2 < y and RPrime(y)) = 3$
+  - $fnPrime(2) = fnBMinimize(y, fnPrime(1)! + 1, fnPrime(1) < y and RPrime(y)) = fnBMinimize(y, 7, 3 < y and RPrime(y)) = 5$
+  - $fnPrime(3) = fnBMinimize(y, fnPrime(2)! + 1, fnPrime(2) < y and RPrime(y)) = fnBMinimize(y, 121, 5 < y and RPrime(y)) = 7$
 
-  $fprime(mono(3))$の有界最小化の探索範囲を見ればわかるとおり，この関数の計算効率は非常が悪い#footnote[100番目の素数$mono(523)$を求める$fprime(mono(100))$で有界最小化の探索範囲はおよそ$10^158$となる．]．
+  $fnPrime(3)$の有界最小化の探索範囲を見ればわかるとおり，この関数の計算効率は非常が悪い#footnote[100番目の素数$523$を求める$fnPrime(100)$で有界最小化の探索範囲はおよそ$10^158$となる．]．
   しかしながら，この計算は必ずいずれ終わるのである．
 ]
 
@@ -680,10 +700,9 @@
 
 == 算術の言語
 
-#let langA = $cal("L")_sans("A")$
 
 #definition(name: "算術の言語")[
-  よって特徴づけられる言語を，算術の言語$langA$という．
+  よって特徴づけられる言語を，算術の言語$ArithmeticLanguage$という．
 ]<fpl:lang_arithmetic>
 
 = Gödelの第1不完全性定理
@@ -698,8 +717,6 @@
 
 = Robinson算術についての第2不完全性定理
 
-#let RobinsonArithmetic = $sans(Q)$
-#let WeakestArithmetic = $sans(R)$
 
 = 算術$WeakestArithmetic$について
 
