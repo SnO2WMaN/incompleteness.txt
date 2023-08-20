@@ -1,14 +1,11 @@
-#let title = "Incompleteness.txt"
-#let authors = (
-  "SnO2WMaN",
+#import "template.typ": *
+
+#show: project.with(
+  title: "Incompleteness.txt",
+  authors: (
+    "SnO2WMaN",
+  ),
 )
-
-#set document(title: title, author: authors)
-#set page(numbering: "1", number-align: center)
-#set heading(numbering: "1.1")
-
-#set text(font: ("Noto Serif CJK JP"), lang: "ja")
-// #set cite(style: "alphanumerical")
 
 #import "@preview/lemmify:0.1.2": *
 #let (
@@ -48,21 +45,6 @@
   it,
   stroke: (left: (thickness: 1pt, dash: "dotted")),
   inset: (left: 1em, right: 1em, top: 0.5em, bottom: 0.5em),
-)
-
-#align(center)[
-  #block(text(weight: 700, 1.75em, lang: "en", title))
-]
-
-#pad(
-  top: 0.5em,
-  bottom: 0.5em,
-  x: 2em,
-  grid(
-    columns: (1fr,) * calc.min(3, authors.len()),
-    gutter: 1em,
-    ..authors.map(author => align(center, strong(author))),
-  ),
 )
 
 #show outline.entry.where(
@@ -205,7 +187,7 @@
 
 == 準備
 
-#TODO[どういうモチベーションで @formalized_nat を導入しているかをちゃんと書く]
+#TODO[どういうモチベーションで #ref(<formalized_nat>)を導入しているかをちゃんと書く]
 
 #definition(name: "形式的な自然数")[
   // あとで書く．
@@ -281,11 +263,11 @@
 
 #definition(name: "原始再帰的関数")[
   ある関数が原始再帰的であるとは，以下のいずれかの条件を満たすことをいう．
-  - 定数関数である．(@Computability_ConstFunction)
-  - 後者関数である．(@Computability_SuccFunction)
-  - 射影関数である．(@Computability_ProjectionFunction)
-  - 原始再帰的な関数による関数合成である．(@Computability_FunctionComposition)
-  - 原始再帰的な関数による原始再帰である．(@Computability_PrimitiveRecursive)
+  - 定数関数である．(#ref(<Computability_ConstFunction>))
+  - 後者関数である．(#ref(<Computability_SuccFunction>))
+  - 射影関数である．(#ref(<Computability_ProjectionFunction>))
+  - 原始再帰的な関数による関数合成である．(#ref(<Computability_FunctionComposition>))
+  - 原始再帰的な関数による原始再帰である．(#ref(<Computability_PrimitiveRecursive>))
 
   原始再帰的な関数を，原始再帰的関数という．
 ]<Computability_PrimitiveRecursiveFunction>
@@ -344,14 +326,14 @@
   // #TODO
 ]
 
-ここまで定義した関数について，定義より明らかに次の @Computability_PrimRecFn1 が成り立つ．
+ここまで定義した関数について，定義より明らかに次の #ref(<Computability_PrimRecFn1>)が成り立つ．
 
 #corollary[
   恒等関数$fnId$，ゼロ関数$fnZero$，加算$fnAdd$，乗算$fnMul$は原始再帰的関数である．
 ]<Computability_PrimRecFn1>
 
-さて，更に関数を定義していきたいが，毎回 @Computability_AddFunction や @Computability_MulFunction のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
-これを避けるために，@Computability_PrimRecFnAbbrev を導入する．
+さて，更に関数を定義していきたいが，毎回#ref(<Computability_AddFunction>)や#ref(<Computability_MulFunction>)のように愚直に全ての関数を書き下していくと，あまりにも煩雑になってしまう．
+これを避けるために，#ref(<Computability_PrimRecFnAbbrev>)を導入する．
 
 #remark[
   以下の略記を用いてもよいとする．
@@ -412,7 +394,7 @@
   $
 ]<Computability_IsPosFunction>
 
-ここまで定義した関数についても，やはり明らかに次の @Computability_PrimRecFn2 が成り立つ．
+ここまで定義した関数についても，やはり明らかに次の #ref(<Computability_PrimRecFn2>)が成り立つ．
 
 #corollary[
   冪乗$fnExp$，階乗$fnFrac$，前者関数$fnPred$，補正付き減算$fnMsub$，ゼロ判定$fnIsZero$，正数判定$fnIsPos$は原始再帰的関数である．
@@ -448,7 +430,7 @@
   - $fnBMul(fnAdd)(2, 3) = fnAdd(2, 3) times fnAdd(2, 2) times fnAdd(2, 1) times fnAdd(2, 0) = 240$
 ]
 
-有界総和と有界総乗についても自明に次の @Computability_PrimRecFn3 が成り立つ．
+有界総和と有界総乗についても自明に次の #ref(<Computability_PrimRecFn3>)が成り立つ．
 
 #corollary[
   $f: Nat2Nat(n+1)$が原始再帰的関数であるなら，有界総和$fnBSum(f)$，有界総乗$fnBMul(f)$は原始再帰的関数である．
@@ -460,7 +442,7 @@
   関係$Rel(R) subset.eq Nat^n$の特性関数$charFn(Rel(R))$が原始再帰的関数であるとき，$Rel(R)$は原始再帰的関係であるという．
 ]
 
-@relation_examples で見た関係は，いずれも原始再帰的関係である．
+#ref(<relation_examples>)で見た関係は，いずれも原始再帰的関係である．
 
 #definition(name: "同値関係")[
   $x,y in Nat$について，「$x$と$y$は同数の$Rel(S)$を持っている」すなわち「$x$と$y$が等しい」という2項関係を同値関係といい，$REq subset.eq Nat^2$として表す．
@@ -507,7 +489,7 @@
   - $charFn(Rel(R) and Rel(S))(vecx) := charFn(Rel(R))(vecx) times charFn(Rel(S))(vecx)$
   - $charFn(Rel(R) or Rel(S))(vecx) := fnIsPos(charFn(Rel(R))(vecx) + charFn(Rel(S))(vecx))$
 
-  このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，@Computability_PrimRecFn1 や @Computability_PrimRecFn2 より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
+  このとき仮定より$Rel(R),Rel(S)$の特性関数$charFn(Rel(R)),chi_Rel(S)$は原始再帰的関数であるので，#ref(<Computability_PrimRecFn1>)や #ref(<Computability_PrimRecFn2>)より，$charFn(not Rel(R)),charFn(Rel(R) and Rel(S)),charFn(Rel(R) or Rel(S))$も原始再帰的関数となる．
 ]
 
 #remark(numbering: none)[
@@ -520,7 +502,7 @@
   - $RGte := RGt or REq$とする．すなわち「$y$は$x$以上」という関係であり，$x <= y$とも書く．
 ]
 
-@Computability_RelLogicOperationIsPrimRec などより明らかに，次の系が成り立つ．
+#ref(<Computability_RelLogicOperationIsPrimRec>)などより明らかに，次の系が成り立つ．
 
 #corollary[
   関係$RNEq, RGte$は，原始再帰的関係である．
@@ -572,11 +554,11 @@
   - $RGtForall(y, m, Rel(R)(vecx, y)) := RGteForall(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
   - $RGteExists(y, m, Rel(R)(vecx, y)) := RGteExists(y, m, Rel(R)(vecx, y)) and not Rel(R)(vecx, m)$
 
-  これらが原始再帰的関係であることは，@Computability_RelLogicOperationIsPrimRec より従う．
+  これらが原始再帰的関係であることは，#ref(<Computability_RelLogicOperationIsPrimRec>)より従う．
 ]
 
 #remark(numbering: none)[
-  @Computability_BoundedQuantificationUpperRemark は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
+  #ref(<Computability_BoundedQuantificationUpperRemark>)は$RGtForall(y, m, Rel(R)(vecx, y))$と$RGtExists(y, m, Rel(R)(vecx, y))$についても成り立つ．
   すなわち，上界を何らかの原始再帰関数$fn(f)(accent(m, arrow))$によって与えた$RGtForall(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$や$RGtExists(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$もやはり原始再帰的な$n + k$項関係となる．
 ]
 
@@ -674,12 +656,12 @@
 ]
 
 #remark[
-  この証明で構成した関数をよく見れば，やはり@Computability_BoundedQuantificationUpperRemark はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
+  この証明で構成した関数をよく見れば，やはり#ref(<Computability_BoundedQuantificationUpperRemark>)はここでも適用できることがわかる．すなわち，有界最小化の上界を何らかの原始再帰関数$f:Nat2Nat(k)$によって与えた$fnBMinimize(y, fn(f)(accent(m, arrow)), Rel(R)(vecx, y))$も，やはり原始再帰的関数として構成できる．
 ]<Computability_BoundedMinificationUpperRemark>
 
 === $n$番目の素数の計算
 
-素数について成り立つ，次の定理 @Computability_NextPrimeSearchRange を用いることで，$i$番目の素数を出力する関数を原始再帰的関数として構成することが出来る．
+素数について成り立つ，次の定理 #ref(<Computability_NextPrimeSearchRange>)を用いることで，$i$番目の素数を出力する関数を原始再帰的関数として構成することが出来る．
 
 #theorem(name: "素数の探索範囲の上界について")[
   $p_n$が$n$番目の素数のとき，次の素数である$n + 1$番目の素数$p_(n+1)$は$p_n ! + 1$以下に存在する．
@@ -699,7 +681,7 @@
 ]
 
 #proof[
-  @Computability_NextPrimeSearchRange より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
+  #ref(<Computability_NextPrimeSearchRange>)より次の素数の探索範囲は$fnPrime(n)! + 1$すなわち有界であるので，有界最小化によって素数を探索することができる．
 
   したがって，所望の関数$fnPrime$は以下のように定義すればよい．
   $
@@ -708,9 +690,9 @@
   $
 
   これまでに次のことを証明してきた#footnote[もちろん，これより多くのことが後ろで積み上がっている．ここでは代表的なものを取り上げた．]．
-  - 階乗が原始再帰的関数として表せること．(@Computability_PrimRecFn2)
-  - $RPrime$が原始再帰的関係であること．(@Computability_RPrimeIsPrimRec)
-  - 有界最小化の上界を原始再帰的関数で定義してもよいこと． (@Computability_BoundedMinificationUpperRemark)
+  - 階乗が原始再帰的関数として表せること．(#ref(<Computability_PrimRecFn2>))
+  - $RPrime$が原始再帰的関係であること．(#ref(<Computability_RPrimeIsPrimRec>))
+  - 有界最小化の上界を原始再帰的関数で定義してもよいこと． (#ref(<Computability_BoundedMinificationUpperRemark>))
 
   これらの結果を踏まえれば，定義した関数が原始再帰的であることは明らか．
 ]
@@ -773,7 +755,7 @@
 ]<GoedelFPLemma>
 
 #definition(name: "Gödel文")[
-  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題 @GoedelFPLemma によって構成される次の文$GoedelSentence$を，理論$TheoryT$のGödel文という．
+  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題 #ref(<GoedelFPLemma>)によって構成される次の文$GoedelSentence$を，理論$TheoryT$のGödel文という．
   $
     TheoryT proves GoedelSentence <-> not Provability(TheoryT, GoedelNumTerm(GoedelSentence))
   $
@@ -789,7 +771,7 @@
 
 #proof(name: $T notproves GoedelSentence$ + "の証明")[
   + $TheoryT proves GoedelSentence$だと仮定する．
-  + @GoedelIT_Drv1 より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$であり，$GoedelSentence$の定義より$TheoryT proves not GoedelSentence$となる．
+  + #ref(<GoedelIT_Drv1>)より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$であり，$GoedelSentence$の定義より$TheoryT proves not GoedelSentence$となる．
   + 纏めれば$T proves G$かつ$T notproves G$であるが，$TheoryT$は無矛盾であると前提しているため，この議論は破綻する．
 
   よって仮定がおかしく，$TheoryT notproves GoedelSentence$である．
@@ -811,8 +793,8 @@
     StandardArithmeticModel models GoedelSentence <=> StandardArithmeticModel models not Provability(TheoryT, GoedelNumTerm(GoedelSentence))<=> T notproves GoedelSentence
   $
 
-  ここで，#underline[$T$が無矛盾であると仮定するならば] @GoedelIT1 より$TheoryT notproves G$であるので$StandardArithmeticModel models GoedelSentence$である．
-  しかしながら，@GoedelIT1 はGödel文は証明も反証も出来ないということ，すなわちGödel文の証明可能性についてだけ触れているのであって，Gödel文の真偽については何も触れていないことに注意せよ．
+  ここで，#underline[$T$が無矛盾であると仮定するならば] #ref(<GoedelIT1>)より$TheoryT notproves G$であるので$StandardArithmeticModel models GoedelSentence$である．
+  しかしながら，#ref(<GoedelIT1>)はGödel文は証明も反証も出来ないということ，すなわちGödel文の証明可能性についてだけ触れているのであって，Gödel文の真偽については何も触れていないことに注意せよ．
 
   Gödel文の真偽は$T$が#underline[実際に]無矛盾であるかどうかに依存しており，その事実は第1不完全性定理によって示されたりはしない．
   故に，第1不完全性定理を「正しいが証明は出来ない言明が存在する」と短絡的に帰結することは若干の危険または誤りがある．
@@ -820,12 +802,12 @@
 
 == Gödel-Rosserの第1不完全性定理
 
-@GoedelIT1 において，不完全性を示す#footnote[より細かく言えば$TheoryT notproves not GoedelSentence$であることを示すことを．]ためには，無矛盾性より強い条件である$Sigma_1$健全性を仮定せざるを得なかった．
+#ref(<GoedelIT1>)において，不完全性を示す#footnote[より細かく言えば$TheoryT notproves not GoedelSentence$であることを示すことを．]ためには，無矛盾性より強い条件である$Sigma_1$健全性を仮定せざるを得なかった．
 この仮定を無矛盾性に弱められることがRosserによって示されている．そのためには，可証性述語を少し変更して，Rosser可証性述語と呼ばれるものに置き換える必要がある．
 
 === Rosser可証性述語
 
-#definition(name: "Rosser可証性述語")[
+#definition(name: [Rosser可証性述語])[
 ]<RosserProvability>
 
 = Gödelの第2不完全性定理
@@ -834,7 +816,7 @@
 
 == 導出可能性条件
 
-#definition(name: "Hilbert-Bernays-Löbの導出可能性条件")[
+#definition(name: [Hilbert-Bernays-Löbの導出可能性条件])[
   $sigma,pi$を文とする．
   $TheoryT$の可証性述語$Provability(TheoryT,x)$について，次の条件$Drv1,Drv2,Drv3$を，Hilbert-Bernays-Löbの導出可能性条件と呼ぶ．
   $
@@ -844,11 +826,11 @@
   $
 ]<DerivabilityCondition>
 
-#definition(name: "標準的可証性述語")[
+#definition(name: [標準的可証性述語])[
   $Drv1,Drv2,Drv3$を満たす理論$TheoryT$の可証性述語$Provability(TheoryT, x)$を，標準的可証性述語という．
 ]
 
-#definition(name: "無矛盾性を表す文")[
+#definition(name: [無矛盾性を表す文])[
   $TheoryT$で反証可能な$Sigma_1$文を1つ取ってきて$bot$とする#footnote[すなわち，$TheoryT proves not bot$である．]．
   $TheoryT$の無矛盾性を表す文$Consistency(TheoryT) := not Provability(TheoryT, GoedelNumTerm(bot))$と定義する．
 ]<Consistency>
@@ -857,7 +839,7 @@
   $Consistency(TheoryT)$は$Pi_1$文である．
 ]
 
-#theorem(name: "形式化された" + $Sigma_1$ + "完全性定理")[
+#theorem(name: [形式化された$Sigma_1$完全性定理])[
   任意の$Sigma_1$文$sigma$に対して次が成立する．
   $
     TheoryT proves sigma -> Provability(TheoryT, GoedelNumTerm(sigma))
@@ -876,7 +858,7 @@
 #lemma[
   任意の$PeanoArithmetic$の拡大理論$TheoryU$と任意の文$sigma$に対して次が成立する．
   $
-    U proves Provability(TheoryT, GoedelNumTerm(sigma)) -> Provability(TheoryT, GoedelNumTerm(sigma)) ==> TheoryU proves Consistency(T) -> not Provability(TheoryT, GoedelNumTerm(sigma))
+    U proves Provability(TheoryT, GoedelNumTerm(sigma)) -> Provability(TheoryT, GoedelNumTerm(not sigma)) ==> TheoryU proves Consistency(T) -> not Provability(TheoryT, GoedelNumTerm(sigma))
   $
 ]<GoedelIT2_GoedelSentenceConsistencyEquality_lem2>
 
@@ -888,14 +870,14 @@
 ]<GoedelIT2_GoedelSentenceConsistencyEquality_lem3>
 
 #proof[
-  + $not GoedelSentence$は$Sigma_1$文であるので，形式化された$Sigma_1$完全性定理 @FormalizedSigma1Completeness より$TheoryT proves not G -> Provability(TheoryT, GoedelNumTerm(not GoedelSentence))$．
+  + $not GoedelSentence$は$Sigma_1$文であるので，形式化された$Sigma_1$完全性定理 #ref(<FormalizedSigma1Completeness>)より$TheoryT proves not G -> Provability(TheoryT, GoedelNumTerm(not GoedelSentence))$．
   + $GoedelSentence$の定義より，$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> not G$．
   + 1,2より，$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> Provability(TheoryT, GoedelNumTerm(not GoedelSentence))$．
-  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem2 と3より，$TheoryT proves Consistency(TheoryT) -> not Provability(TheoryT, GoedelNumTerm(GoedelSentence))$．
+  + #ref(<GoedelIT2_GoedelSentenceConsistencyEquality_lem2>)と3より，$TheoryT proves Consistency(TheoryT) -> not Provability(TheoryT, GoedelNumTerm(GoedelSentence))$．
   以上で示された．
 ]
 
-#theorem(name: "Gödel文と無矛盾性の同値性")[
+#theorem(name: [Gödel文と無矛盾性の同値性])[
   $TheoryT$のGödel文$GoedelSentence$と，$TheoryT$の無矛盾性を表す文$Consistency(TheoryT)$とが，標準的可証性述語によって構成されているとき，次が成立する．
   $
     TheoryT proves GoedelSentence <-> Consistency(TheoryT)
@@ -903,40 +885,40 @@
 ]<GoedelIT2_GoedelSentenceConsistencyEquality>
 
 #proof[
-  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem1 に$GoedelSentence$を適用して$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> Consistency(TheoryT)$．
-  + @GoedelIT2_GoedelSentenceConsistencyEquality_lem3 と1を合わせて，$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) <-> Consistency(TheoryT)$．
+  + #ref(<GoedelIT2_GoedelSentenceConsistencyEquality_lem1>)に$GoedelSentence$を適用して$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) -> Consistency(TheoryT)$．
+  + #ref(<GoedelIT2_GoedelSentenceConsistencyEquality_lem3>)と1を合わせて，$TheoryT proves not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) <-> Consistency(TheoryT)$．
   + Gödel文の定義より，$TheoryT proves GoedelSentence <-> Consistency(TheoryT)$．
   以上で示された．
 ]
 
-@GoedelIT2_GoedelSentenceConsistencyEquality より，明らかに次の系が成り立つ．
+#ref(<GoedelIT2_GoedelSentenceConsistencyEquality>)より，明らかに次の系が成り立つ．
 
 #corollary[
   任意の$TheoryT$のGödel文$GoedelSentence,GoedelSentence'$に対して$TheoryT proves GoedelSentence <-> GoedelSentence'$
 ]
 
-#theorem(name: "Gödelの第2不完全性定理")[
+#theorem(name: [Gödelの第2不完全性定理])[
   $TheoryT$が$PeanoArithmetic$の再帰的可算な拡大理論であるとする．このとき，以下が成り立つ．
   - $TheoryT$が無矛盾ならば，$TheoryT notproves Consistency(TheoryT)$
   - $TheoryT$が$Sigma_1$健全ならば，$TheoryT notproves not Consistency(TheoryT)$
 ]<GoedelIT2>
 
 #proof[
-  第1不完全性定理 @GoedelIT1 と Gödel文と無矛盾性の同値性 @GoedelIT2_GoedelSentenceConsistencyEquality より従う．
+  第1不完全性定理(#ref(<GoedelIT1>))とGödel文と無矛盾性の同値性(#ref(<GoedelIT2_GoedelSentenceConsistencyEquality>))より従う．
 ]
 
 == Kreiselの注意
 
-@GoedelIT2 においてもGödel-Rosserの第1不完全性定理のように$Sigma_1$健全を弱めることが出来ないのだろうか？これは出来ないのである．
+#ref(<GoedelIT2>)においてもGödel-Rosserの第1不完全性定理のように$Sigma_1$健全を弱めることが出来ないのだろうか？これは出来ないのである．
 
 #theorem[
   Rosser可証性述語は導出可能性条件$Drv2,Drv3$を同時に満たさない．
 ]
 
-#corollary(name: "Kreiselの注意")[
-  $TheoryT proves not RosserProvability(TheoryT, GoedelNumTerm(bot))$．ただし$bot$は @Consistency での用法と同じ#footnote[すなわち例えば文$0 = 1$などのことを指す．]とする．
+#corollary(name: [Kreiselの注意])[
+  $TheoryT proves not RosserProvability(TheoryT, GoedelNumTerm(bot))$．ただし$bot$は #ref(<Consistency>)での用法と同じ#footnote[すなわち例えば文$0 = 1$などのことを指す．]とする．
 
-  言い換えれば，@Consistency で用いる可証性述語としてRosser可証性述語を利用して無矛盾性を表した文$RosserConsistency(TheoryT) := not RosserProvability(TheoryT, GoedelNumTerm(bot))$を構成した場合は，第2不完全性定理は成り立たない．
+  言い換えれば，#ref(<Consistency>)で用いる可証性述語としてRosser可証性述語を利用して無矛盾性を表した文$RosserConsistency(TheoryT) := not RosserProvability(TheoryT, GoedelNumTerm(bot))$を構成した場合は，第2不完全性定理は成り立たない．
 ]
 
 = Löbの定理
@@ -944,8 +926,8 @@
 Gödelの不動点補題と可証性述語を組み合わせると，様々な自己言及的な文を構成することが出来る．
 Gödel文は自己の証明不可能性を主張する文として定義されたが，逆に，自己の証明可能性を主張する文を考えるとどんなことが起こるのか考えてみよう．
 
-#definition(name: "Henkin文")[
-  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題 @GoedelFPLemma によって構成される次の文$HenkinSentence$を，理論$TheoryT$のHenkin文という．
+#definition(name: [Henkin文])[
+  $Provability(TheoryT, x)$が可証性述語であるとき，不動点補題#ref(<GoedelFPLemma>)によって構成される次の文$HenkinSentence$を，理論$TheoryT$のHenkin文という．
   $
     TheoryT proves HenkinSentence <-> Provability(TheoryT, GoedelNumTerm(HenkinSentence))
   $
@@ -953,7 +935,7 @@ Gödel文は自己の証明不可能性を主張する文として定義され�
 
 このとき，#underline[Henkin文は$TheoryT$で証明可能なのか？]という問題がHenkinによって提案された．この問題はLöbによって，より一般的な形で解決された．
 
-#theorem(name: "Löbの定理")[
+#theorem(name: [Löbの定理])[
   任意の文$sigma$に対して次が成立する．
   $
     TheoryT proves sigma <==> TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma
@@ -963,6 +945,7 @@ Gödel文は自己の証明不可能性を主張する文として定義され�
 $==>$については自明なので，問題は$<==$を証明することである．この証明には第2不完全性定理を使う証明と使わない証明がある．
 
 Löbの定理で文$sigma$を$HenkinSentence$とすればHenkinの問題は解決される．
+
 #corollary[
   $TheoryT proves HenkinSentence$である．
 ]
@@ -981,7 +964,7 @@ Löbの定理で文$sigma$を$HenkinSentence$とすればHenkinの問題は解�
 
 Löbの定理は形式化することが可能である．
 
-#theorem(name: "形式化されたLöbの定理")[
+#theorem(name: [形式化されたLöbの定理])[
   任意の文$sigma$に対して次が成立する．
   $
     TheoryT proves Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma)) -> Provability(TheoryT, GoedelNumTerm(sigma))
