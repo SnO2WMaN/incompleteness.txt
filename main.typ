@@ -110,29 +110,34 @@
 #let RGtForall(y, m, r) = $forall_(#y < #m).[#r]$
 #let RGtExists(y, m, r) = $exists_(#y < #m).[#r]$
 
-#let GoedelNum(x) = $┌ #x ┐$
+#let GoedelNum(x) = $lr(⸢#x⸣)$ // $⸢#x⸣$ // $attach(#x, tl: "⸢", tr: "⸣")$ // $⌜#x⌝$ //  $attach(#x, tl: "⌜", tr: "⌝")$
 #let NumTerm(x) = $overline(#x)$
 #let GoedelNumTerm(x) = $NumTerm(GoedelNum(#x))$
 
-#let GoedelSentence = $G$
-#let RosserSentence = $R$
-#let HenkinSentence = $H$
-#let JeroslowSentence = $J$
+#let GoedelSentence = $serif("G")$
+#let RosserSentence = $serif("R")$
+#let HenkinSentence = $serif("H")$
+#let JeroslowSentence = $serif("J")$
 
-#let Provability(T, content) = $serif("Pr")_(#T)(content)$
-#let RosserProvability(T, content) = $serif("Pr")^serif("Ro")_(#T)(content)$
-#let Consistency(T) = $serif("Con")_#T$
-#let RosserConsistency(T) = $serif("Con")^serif("Ro")_#T$
+#let Provability(T, lt: none, content) = $serif("Pr")^(#lt)_(#T)(content)$
+#let RosserProvability(T, content) = $Provability(#T, lt: serif("Ro"), #content)$
+#let Consistency(T, lt: none) = $serif("Con")^(#lt)_#T$
+#let RosserConsistency(T) = $Consistency(#T, lt: serif("Ro"))$
 
 #let Drv1 = $bold(serif("D1"))$
 #let Drv2 = $bold(serif("D2"))$
 #let Drv3 = $bold(serif("D3"))$
 
-#let proves = $tack.r$
-#let notproves = $tack.r.not$
+#let proves = symbol(
+  "\u{22A2}",
+  ("not", "\u{22AC}")
+)
+#let models = symbol(
+  "\u{22A8}",
+  ("not", "\u{22AD}")
+)
 
-#let models = $tack.r.double$
-#let notmodels = $tack.r.double.not$
+#let iff = $<==>$
 
 #let TheoryT = $T$
 #let TheoryU = $U$
@@ -763,37 +768,37 @@
 
 #theorem(name: "Gödelの第1不完全性定理")[
   $TheoryT$を$PeanoArithmetic$の再帰的可算な拡大理論であるとし，$GoedelSentence$を$TheoryT$のGödel文とする．このとき，以下が成り立つ．
-  - $TheoryT$が無矛盾ならば，$TheoryT notproves GoedelSentence$．
-  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT notproves not GoedelSentence$．
+  - $TheoryT$が無矛盾ならば，$TheoryT proves.not GoedelSentence$．
+  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT proves.not not GoedelSentence$．
 
   故に，$TheoryT$が無矛盾かつ$Sigma_1$健全ならば，$TheoryT$は不完全である．
 ]<GoedelIT1>
 
-#proof(name: $T notproves GoedelSentence$ + "の証明")[
+#proof(name: $T proves.not GoedelSentence$ + "の証明")[
   + $TheoryT proves GoedelSentence$だと仮定する．
   + #ref(<GoedelIT_Drv1>)より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$であり，$GoedelSentence$の定義より$TheoryT proves not GoedelSentence$となる．
-  + 纏めれば$T proves G$かつ$T notproves G$であるが，$TheoryT$は無矛盾であると前提しているため，この議論は破綻する．
+  + 纏めれば$T proves G$かつ$T proves.not G$であるが，$TheoryT$は無矛盾であると前提しているため，この議論は破綻する．
 
-  よって仮定がおかしく，$TheoryT notproves GoedelSentence$である．
+  よって仮定がおかしく，$TheoryT proves.not GoedelSentence$である．
 ]
 
-#proof(name: $T notproves not GoedelSentence$ + "の証明")[
+#proof(name: $T proves.not not GoedelSentence$ + "の証明")[
   + $TheoryT proves not GoedelSentence$だと仮定する．
   + $GoedelSentence$の定義より$TheoryT proves Provability(TheoryT, GoedelNumTerm(GoedelSentence))$となる．
   + $Provability(TheoryT, GoedelNumTerm(GoedelSentence))$が$Sigma_1$文であるため，$TheoryT$が$Sigma_1$健全であることから$StandardArithmeticModel models Provability(TheoryT, GoedelNumTerm(GoedelSentence))$となる．
   + $StandardArithmeticModel models Provability(TheoryT, GoedelNumTerm(GoedelSentence))$と$T proves G$は同値である．
   + 纏めれば$T proves not GoedelSentence$かつ$T proves GoedelSentence$であるが，$TheoryT$は$Sigma_1$健全すなわち無矛盾であると前提しているため，この議論は破綻する．
 
-  よって仮定がおかしく，$TheoryT notproves not GoedelSentence$である．
+  よって仮定がおかしく，$TheoryT proves.not not GoedelSentence$である．
 ]
 
 #remark(name: "Gödel文の真偽")[
   Gödel文の定義より，以下が成り立つ．
   $
-    StandardArithmeticModel models GoedelSentence <=> StandardArithmeticModel models not Provability(TheoryT, GoedelNumTerm(GoedelSentence))<=> T notproves GoedelSentence
+    StandardArithmeticModel models GoedelSentence iff StandardArithmeticModel models not Provability(TheoryT, GoedelNumTerm(GoedelSentence)) iff T proves.not GoedelSentence
   $
 
-  ここで，#underline[$T$が無矛盾であると仮定するならば] #ref(<GoedelIT1>)より$TheoryT notproves G$であるので$StandardArithmeticModel models GoedelSentence$である．
+  ここで，#underline[$T$が無矛盾であると仮定するならば] #ref(<GoedelIT1>)より$TheoryT proves.not G$であるので$StandardArithmeticModel models GoedelSentence$である．
   しかしながら，#ref(<GoedelIT1>)はGödel文は証明も反証も出来ないということ，すなわちGödel文の証明可能性についてだけ触れているのであって，Gödel文の真偽については何も触れていないことに注意せよ．
 
   Gödel文の真偽は$T$が#underline[実際に]無矛盾であるかどうかに依存しており，その事実は第1不完全性定理によって示されたりはしない．
@@ -802,7 +807,7 @@
 
 == Gödel-Rosserの第1不完全性定理
 
-#ref(<GoedelIT1>)において，不完全性を示す#footnote[より細かく言えば$TheoryT notproves not GoedelSentence$であることを示すことを．]ためには，無矛盾性より強い条件である$Sigma_1$健全性を仮定せざるを得なかった．
+#ref(<GoedelIT1>)において，不完全性を示す#footnote[より細かく言えば$TheoryT proves.not not GoedelSentence$であることを示すことを．]ためには，無矛盾性より強い条件である$Sigma_1$健全性を仮定せざるを得なかった．
 この仮定を無矛盾性に弱められることがRosserによって示されている．そのためには，可証性述語を少し変更して，Rosser可証性述語と呼ばれるものに置き換える必要がある．
 
 === Rosser可証性述語
@@ -899,8 +904,8 @@
 
 #theorem(name: [Gödelの第2不完全性定理])[
   $TheoryT$が$PeanoArithmetic$の再帰的可算な拡大理論であるとする．このとき，以下が成り立つ．
-  - $TheoryT$が無矛盾ならば，$TheoryT notproves Consistency(TheoryT)$
-  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT notproves not Consistency(TheoryT)$
+  - $TheoryT$が無矛盾ならば，$TheoryT proves.not Consistency(TheoryT)$
+  - $TheoryT$が$Sigma_1$健全ならば，$TheoryT proves.not not Consistency(TheoryT)$
 ]<GoedelIT2>
 
 #proof[
@@ -938,7 +943,7 @@ Gödel文は自己の証明不可能性を主張する文として定義され�
 #theorem(name: [Löbの定理])[
   任意の文$sigma$に対して次が成立する．
   $
-    TheoryT proves sigma <==> TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma
+    TheoryT proves sigma iff TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma
   $
 ]
 
