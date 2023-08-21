@@ -912,6 +912,10 @@
   第1不完全性定理(#ref(<GoedelIT1>))とGödel文と無矛盾性の同値性(#ref(<GoedelIT2_GoedelSentenceConsistencyEquality>))より従う．
 ]
 
+#remark[
+  第2不完全性定理#ref(<GoedelIT2>)の対偶も重要な応用がある．すなわち，#underline[自身の無矛盾性が$TheoryT$で証明できてしまう#footnote[$TheoryT proves Consistency(TheoryT)$．]なら，$TheoryT$は矛盾している]という事実はよく用いられる．
+]<GoedelIT2_Contradiction>
+
 == Kreiselの注意
 
 #ref(<GoedelIT2>)においてもGödel-Rosserの第1不完全性定理のように$Sigma_1$健全を弱めることが出来ないのだろうか？これは出来ないのである．
@@ -938,7 +942,7 @@ Gödel文は自己の証明不可能性を主張する文として定義され�
   $
 ]<HenkinSentence>
 
-このとき，#underline[Henkin文は$TheoryT$で証明可能なのか？]という問題がHenkinによって提案された．この問題はLöbによって，より一般的な形で解決された．
+このとき，#underline[Henkin文は$TheoryT$で証明可能なのか？]という問題がHenkin#cite("henkin_1952")によって提案された．この問題はLöb#cite("loeb_1955")によって，より一般的な形で解決された．
 
 #theorem(name: [Löbの定理])[
   任意の文$sigma$に対して次が成立する．
@@ -947,9 +951,9 @@ Gödel文は自己の証明不可能性を主張する文として定義され�
   $
 ]
 
-$==>$については自明なので，問題は$<==$を証明することである．この証明には第2不完全性定理を使う証明と使わない証明がある．
+$==>$については自明なので，問題は$<==$を証明することである．この証明には第2不完全性定理を使う証明(#ref(<OriginalLoebTheoremProof>))と，第2不完全性定理を使わないLöbのオリジナルの証明(#ref(<OriginalLoebTheoremProof>))がある．特に後者の証明からは第2不完全性定理が系として得られる(#ref(<LoebTheoremImplyGoedelIT2>))．
 
-Löbの定理で文$sigma$を$HenkinSentence$とすればHenkinの問題は解決される．
+前述の通り，Löbの定理はHenkinの問題を一般化したものであり，$sigma$を$HenkinSentence$とすればHenkinの問題は解決される．
 
 #corollary[
   $TheoryT proves HenkinSentence$である．
@@ -957,13 +961,64 @@ Löbの定理で文$sigma$を$HenkinSentence$とすればHenkinの問題は解�
 
 == Löbの定理の意義
 
-== 第2不完全性定理を用いた証明
+== 第2不完全性定理を用いた証明 <LoebTheoremProofByGoedelIT2>
 
-== オリジナルのLöbの証明
+第2不完全性定理は証明済みとする．このときLöbの定理は次のように証明される．
 
-=== 第2不完全性定理の証明
+#proof[
+  $TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma$を仮定する．
+  対偶と演繹定理より，$TheoryT + not sigma proves not Provability(TheoryT, GoedelNumTerm(sigma))$となる．
 
-オリジナルのLöbの証明では第2不完全性定理を用いていないが，Löbの定理から逆に第2不完全性定理を証明することも出来る．
+  ここで，$Drv2$の対偶として$TheoryT + not sigma proves (Provability(T, GoedelNumTerm(not sigma)) and Consistency(TheoryT)) -> not Provability(TheoryT, GoedelNumTerm(not sigma -> bot))$が成り立つ．$not Provability(TheoryT, GoedelNumTerm(bot)) equiv Consistency(TheoryT)$であることに注意．
+
+  $TheoryT + not sigma proves not sigma$と$Drv1$より$TheoryT proves Provability(T, GoedelNumTerm(not sigma))$であり，
+  $TheoryT + not sigma proves not Provability(TheoryT, GoedelNumTerm(sigma))$と#ref(<GoedelIT2_GoedelSentenceConsistencyEquality_lem1>)より$TheoryT + not sigma proves Consistency(TheoryT)$である．
+  よって，$TheoryT + not sigma proves not Provability(TheoryT, GoedelNumTerm(not sigma -> bot))$である．
+
+  更に，形式化された演繹定理より，$T + not sigma proves not Provability(TheoryT + not sigma, GoedelNumTerm(bot))$となる．
+  ここで，$not Provability(TheoryT + not sigma, GoedelNumTerm(bot)) equiv Consistency(TheoryT + not sigma)$であることに注意すれば，$T + not sigma proves Consistency(TheoryT + not sigma)$である．
+  このとき，第2不完全性定理より$TheoryT + not sigma$は矛盾してしまう#footnote[#ref(<GoedelIT2_Contradiction>)も参照せよ．]ことがわかる．よって，$TheoryT proves sigma$である．
+]
+
+== オリジナルのLöbの証明 <OriginalLoebTheoremProof>
+
+一方，Löbのオリジナルの証明では第2不完全性定理を用いておらず，不動点補題を用いてKreisel文と呼ばれる文を構成し，それに基づいて証明している．
+
+#let KreiselSentence = $K$
+#definition[
+  任意の文$sigma$に対して，不動点補題を用いて構成される次の文$KreiselSentence$を，$TheoryT$のKreisel文と呼ぶ．
+  $
+    TheoryT proves KreiselSentence <-> (Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> sigma)
+  $
+]
+
+それでは証明しよう．
+
+#proof[
+  $TheoryT proves Provability(TheoryT, GoedelNumTerm(sigma)) -> sigma$を仮定する．
+
+  また，Kriesel文$KreiselSentence$として$TheoryT proves KreiselSentence <-> (Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> sigma)$を構成する．
+
+  以下の議論によって，$T proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> Provability(TheoryT, GoedelNumTerm(sigma))$が成り立つ．
+  + $TheoryT proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> sigma))$．
+    - $Drv1$より以下が成り立ち，これを$KreiselSentence$の定義と合わせる．
+      - $TheoryT proves KreiselSentence ==> TheoryT proves Provability(TheoryT, GoedelNumTerm(KreiselSentence))$．
+      - $TheoryT proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) ==> TheoryT proves Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(KreiselSentence))))$．
+  + $TheoryT proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> (Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(KreiselSentence)))) -> Provability(TheoryT,sigma))$．
+    - $Drv2$より$TheoryT proves Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> sigma))) -> (Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> Provability(TheoryT, GoedelNumTerm(sigma)))$であり，これと1を合わせる．
+  + $T proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> Provability(TheoryT, GoedelNumTerm(sigma))$．
+    - $Drv3$より$TheoryT proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> Provability(TheoryT, GoedelNumTerm(Provability(TheoryT, KreiselSentence)))$であり，これと2を合わせる．
+
+  仮定と合わせて#ref(<OriginalLoebTheoremProof_eq>)が成り立つ．
+  #math.equation(block: true, numbering: "(1)")[
+    $T proves Provability(TheoryT, GoedelNumTerm(KreiselSentence)) -> sigma$
+  ] <OriginalLoebTheoremProof_eq>
+
+  ここで，#ref(<OriginalLoebTheoremProof_eq>)と$KreiselSentence$の定義より$T proves KreiselSentence$であり，$Drv1$より$T proves Provability(TheoryT, GoedelNumTerm(KreiselSentence))$である．
+  再び#ref(<OriginalLoebTheoremProof_eq>)を用いれば，$T proves sigma$となる．
+]
+
+=== Löbの定理の系としての第2不完全性定理 <LoebTheoremImplyGoedelIT2>
 
 == 形式化されたLöbの定理
 
@@ -1008,4 +1063,4 @@ Robinson算術$RobinsonArithmetic$よりも更に弱い算術でも不完全性�
 
 = 自己検証可能な理論
 
-#bibliography("bib.yml")
+#bibliography("bib.yml", style: "ieee")

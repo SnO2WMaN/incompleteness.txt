@@ -104,10 +104,31 @@ smullyan_1992_ja:
 kikuchi_sano_kurahashi_usuba_kurokawa_2016:
   title: 数学における証明と真理 ─ 様相論理と数学基礎論
   author:
+    - 菊池 誠
     - 佐野 勝彦
     - 倉橋 太志
     - 薄葉 季路
     - 黒川 英徳
-    - 菊池 誠
   date: 2016
   publisher: 共立出版
+
+henkin_1952:
+  title: A problem concerning provability
+  author: L. Henkin
+  parent:
+    type: periodical
+    title: Journal of Symbolic Logic
+    date: 1952
+    volume: 17
+    page: 160
+
+loeb_1955:
+  title: Solution of a Problem of Leon Henkin
+  author: M. H. Löb
+  parent:
+    type: periodical
+    title: Journal of Symbolic Logic
+    date: 1955
+    volume: 20
+    issue: 2
+    page: 115
