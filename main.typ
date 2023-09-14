@@ -1018,7 +1018,19 @@ $==>$については自明なので，問題は$<==$を証明することであ�
   再び#ref(<OriginalLoebTheoremProof_eq>)を用いれば，$T proves sigma$となる．
 ]
 
-=== Löbの定理の系としての第2不完全性定理 <LoebTheoremImplyGoedelIT2>
+== Löbの定理の系としての第2不完全性定理
+
+Löbの定理は第2不完全定理の一般化ともなっている#footnote[もちろん，Löbの定理を示すために第2不完全性定理を用いたら循環論法となってしまうため，Löbのオリジナルの証明を用いる．]．
+
+#theorem(name: [第2不完全性定理の対偶])[
+  $TheoryT proves Consistency(TheoryT)$ならば$TheoryT$は矛盾する．
+]
+
+#proof[
+  $TheoryT proves Consistency(TheoryT)$だと仮定すれば，$Consistency(TheoryT)$の定義より$TheoryT proves Provability(TheoryT, GoedelNumTerm(bot)) -> bot$である．
+  するとLöbの定理より$TheoryT proves bot$であり，すなわち$TheoryT$は矛盾してしまう．
+]
+
 
 == 形式化されたLöbの定理
 
